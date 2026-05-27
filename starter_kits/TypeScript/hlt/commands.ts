@@ -7,8 +7,10 @@ export class Commands {
     public static readonly SOUTH = "s";
     public static readonly EAST = "e";
     public static readonly WEST = "w";
-    public static readonly STAY_STILL = "o";
+    public static readonly STAY_STILL = "s";
     public static readonly GENERATE = "g";
     public static readonly CONSTRUCT = "c";
     public static readonly MOVE = "m";
+    public static readonly ATTACK = "a";
+    public static readonly ATTACK_STRUCTURE = "x";
 }

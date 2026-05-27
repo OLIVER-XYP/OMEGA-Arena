@@ -45,7 +45,17 @@
         /// </summary>
         public Command StayStill()
         {
-            return Command.Move(id, Direction.STILL);
+            return Command.Stay(id);
+        }
+
+        public Command Attack(Ship target)
+        {
+            return Command.Attack(id, target.id);
+        }
+
+        public Command AttackStructure(PlayerId ownerId, Position targetPos)
+        {
+            return Command.AttackStructure(id, ownerId, targetPos);
         }
 
         /// <summary>

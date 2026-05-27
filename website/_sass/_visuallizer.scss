@@ -242,12 +242,13 @@
         }
 
         .replay-btn {
-          margin-right: 25px;
+          margin-right: 16px;
           a{
-            width: 18px;
+            width: 14px;
             display: inline-block;
             text-decoration: none;
             color: inherit;
+            font-size: 0.9em;
             &:hover, &:focus{
               color: #fff;
             }

@@ -6,10 +6,12 @@ const NORTH = 'n';
 const SOUTH = 's';
 const EAST = 'e';
 const WEST = 'w';
-const STAY_STILL = 'o';
+const STAY_STILL = 's';
 const GENERATE = 'g';
 const CONSTRUCT = 'c';
 const MOVE = 'm';
+const ATTACK = 'a';
+const ATTACK_STRUCTURE = 'x';
 
 module.exports = {
     NORTH,
@@ -20,4 +22,6 @@ module.exports = {
     GENERATE,
     CONSTRUCT,
     MOVE,
+    ATTACK,
+    ATTACK_STRUCTURE,
 };

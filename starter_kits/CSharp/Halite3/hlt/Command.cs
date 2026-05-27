@@ -33,6 +33,21 @@
             return new Command("m " + id + ' ' + (char)direction);
         }
 
+        public static Command Stay(EntityId id)
+        {
+            return new Command("s " + id);
+        }
+
+        public static Command Attack(EntityId attackerId, EntityId targetId)
+        {
+            return new Command("a " + attackerId + ' ' + targetId);
+        }
+
+        public static Command AttackStructure(EntityId attackerId, PlayerId ownerId, Position targetPos)
+        {
+            return new Command("x " + attackerId + ' ' + ownerId + ' ' + targetPos.x + ' ' + targetPos.y);
+        }
+
         private Command(string command)
         {
             this.command = command;

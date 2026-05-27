@@ -34,7 +34,15 @@ export class Ship extends Entity {
      * Not strictly needed, since ships do nothing by default.
      */
     public stayStill() {
-        return `${Commands.MOVE} ${this.id} ${Commands.STAY_STILL}`;
+        return `${Commands.STAY_STILL} ${this.id}`;
+    }
+
+    public attack(target: Ship) {
+        return `${Commands.ATTACK} ${this.id} ${target.id}`;
+    }
+
+    public attackStructure(ownerId: number, position: Position) {
+        return `${Commands.ATTACK_STRUCTURE} ${this.id} ${ownerId} ${position.x} ${position.y}`;
     }
 
     public updateShip(x: number, y: number, halite: number) {

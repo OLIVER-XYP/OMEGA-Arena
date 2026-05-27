@@ -21,7 +21,15 @@ public class Ship extends Entity {
     }
 
     public Command stayStill() {
-        return Command.move(id, Direction.STILL);
+        return Command.stay(id);
+    }
+
+    public Command attack(final Ship target) {
+        return Command.attack(id, target.id);
+    }
+
+    public Command attackStructure(final PlayerId ownerId, final Position targetPos) {
+        return Command.attackStructure(id, ownerId, targetPos);
     }
 
     static Ship _generate(final PlayerId playerId) {

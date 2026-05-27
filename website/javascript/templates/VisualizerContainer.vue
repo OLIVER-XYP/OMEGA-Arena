@@ -47,6 +47,8 @@
                   Promise.resolve([]);
 
     const buffer = game.replay
+    const base = (typeof _global !== 'undefined' && _global.baseUrl) ? _global.baseUrl.replace(/\/$/, '') : '';
+    const assetRoot = (window && window.process && window.process.type) ? 'assets/js/' : `${base}/assets/js/`;
     return import(/* webpackChunkName: "libhaliteviz" */ "libhaliteviz")
       .then((libhaliteviz) =>Promise.all([
           (
@@ -54,7 +56,7 @@
             (window && window.process &&
              window.process.type) ?
             libhaliteviz.setAssetRoot('assets/js/') :
-            libhaliteviz.setAssetRoot('')
+            libhaliteviz.setAssetRoot(assetRoot)
           ).then(() => libhaliteviz),
           users,
       ]))

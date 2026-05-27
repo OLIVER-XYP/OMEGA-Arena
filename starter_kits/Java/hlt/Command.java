@@ -15,6 +15,18 @@ public class Command {
         return new Command("m " + id + ' ' + direction.charValue);
     }
 
+    public static Command stay(EntityId id) {
+        return new Command("s " + id);
+    }
+
+    public static Command attack(final EntityId attackerId, final EntityId targetId) {
+        return new Command("a " + attackerId + ' ' + targetId);
+    }
+
+    public static Command attackStructure(final EntityId attackerId, final PlayerId ownerId, final Position targetPos) {
+        return new Command("x " + attackerId + ' ' + ownerId + ' ' + targetPos.x + ' ' + targetPos.y);
+    }
+
     private Command(final String command) {
         this.command = command;
     }

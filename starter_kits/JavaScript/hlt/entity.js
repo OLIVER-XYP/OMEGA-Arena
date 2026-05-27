@@ -77,7 +77,17 @@ class Ship extends Entity {
      * Not strictly needed, since ships do nothing by default.
      */
     stayStill() {
-        return `${commands.MOVE} ${this.id} ${commands.STAY_STILL}`;
+        return `${commands.STAY_STILL} ${this.id}`;
+    }
+
+    /** Attack an adjacent enemy ship. */
+    attack(target) {
+        return `${commands.ATTACK} ${this.id} ${target.id}`;
+    }
+
+    /** Attack an adjacent enemy structure by owner and location. */
+    attackStructure(ownerId, position) {
+        return `${commands.ATTACK_STRUCTURE} ${this.id} ${ownerId} ${position.x} ${position.y}`;
     }
 
     /**

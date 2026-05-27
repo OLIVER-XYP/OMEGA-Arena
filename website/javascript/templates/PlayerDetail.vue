@@ -77,10 +77,17 @@ export default {
       return d3.max(this.chartData.map(player => d3.max(player, (d) => d.y)), (y) => y);
     },
     currentHalite() {
-      let result = {
-      }
-      for(let index in this.statistics) {
-        result[index] = this.frame > 0? this.replay.full_frames[this.frame - 1].energy[index]: this.replay.GAME_CONSTANTS.INITIAL_ENERGY
+      const result = {}
+      for (let index in this.statistics) {
+        const prev = this.frame > 0
+          ? this.replay.full_frames[this.frame - 1].energy[index]
+          : this.replay.GAME_CONSTANTS.INITIAL_ENERGY
+        const curr = this.replay.full_frames[this.frame]
+          ? this.replay.full_frames[this.frame].energy[index]
+          : prev
+        const delta = curr - prev
+        const deltaSign = delta >= 0 ? '+' : ''
+        result[index] = `${this.numberSep(prev)} → ${this.numberSep(curr)} (Δ${deltaSign}${this.numberSep(delta)})`
       }
       return result
     },
@@ -89,7 +96,10 @@ export default {
     currentEfficiency(index) {
       if (!this.stats) return 0;
       const deposited = this.replay.GAME_CONSTANTS.INITIAL_ENERGY + this.stats.frames[this.frame].players[index].depositedHalite
-      return this.currentHalite[index] / deposited
+      const current = this.replay.full_frames[this.frame]
+        ? this.replay.full_frames[this.frame].energy[index]
+        : (this.frame > 0 ? this.replay.full_frames[this.frame - 1].energy[index] : this.replay.GAME_CONSTANTS.INITIAL_ENERGY)
+      return current / deposited
     },
     numberSep: function (number) {
       return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')

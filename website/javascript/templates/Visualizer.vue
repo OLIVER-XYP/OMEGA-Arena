@@ -44,16 +44,16 @@
                   <a href="javascript:;" @click="toggleSpeed"><span v-html="speedLabel"></span></a>
               </span>
               <span class="replay-btn">
-                  <a href="javascript:;" @click="prevFrame"><span class="icon-prev"></span></a>
+                  <a href="javascript:;" @click="prevFrame"><span class="fa fa-step-backward"></span></a>
               </span>
               <span v-if="!playing" class="replay-btn" style="text-align: center">
-                  <a href="javascript:;" @click="playVideo"><span class="icon-play"></span></a>
+                  <a href="javascript:;" @click="playVideo"><span class="fa fa-play"></span></a>
               </span>
               <span v-if="playing" class="replay-btn" style="text-align: center">
-                  <a href="javascript:;" @click="pauseVideo"><span class="icon-pause"></span></a>
+                  <a href="javascript:;" @click="pauseVideo"><span class="fa fa-pause"></span></a>
               </span>
               <span class="replay-btn">
-                  <a href="javascript:;" @click="nextFrame"><span class="icon-next"></span></a>
+                  <a href="javascript:;" @click="nextFrame"><span class="fa fa-step-forward"></span></a>
               </span>
               <span class="replay-btn reset-btn" style="text-align: center">
                   <a href="javascript:;" @click="resetView" title="Reset zoom/pan"><span class="fa fa-refresh"></span></a>
@@ -63,7 +63,7 @@
               </span>
               <span class="replay-btn">
                   <a style="text-align: center; margin-bottom: 4px;" v-if="game && game.game_id" :href="replay_download_link(game.game_id)">
-                    <span class="icon-download"></span>
+                    <span class="fa fa-download"></span>
               </a>
               </span>
             </div>
@@ -178,12 +178,13 @@ const speedList = {
 }
 
 const loadGame = (game) => {
+  const base = (typeof _global !== 'undefined' && _global.baseUrl) ? _global.baseUrl.replace(/\/$/, '') : '';
+  const assetRoot = (window && window.process && window.process.type) ? 'assets/js/' : `${base}/assets/js/`;
   return import ( /* webpackChunkName: "libhaliteviz" */ "libhaliteviz")
     .then((libhaliteviz) => {
       // just for electron
       return libhaliteviz
-        .setAssetRoot((window && window.process && window.process.type) ?
-          'assets/js/' : '')
+        .setAssetRoot(assetRoot)
         .then(() => libhaliteviz.parseReplay(game.replay))
     });
 };

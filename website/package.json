@@ -5,9 +5,9 @@
   "main": "javascript/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cross-env NODE_ENV=production webpack --mode=production",
-    "debug": "webpack --config=webpack.config.js --mode=development",
-    "watch": "webpack -w --mode=development"
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=production webpack --mode=production",
+    "debug": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --config=webpack.config.js --mode=development",
+    "watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack -w --mode=development"
   },
   "author": "David Li <David.M.Li@TwoSigma.com>",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "md5": "^2.2.1",
     "numeral": "^2.0.6",
     "text-encoding": "^0.6.4",
-    "vue": "^3.0.0",
+    "vue": "2.5.16",
     "vue-cookie": "^1.1.4",
     "vue-moment": "^4.1.0",
     "vue-select": "2.5.1",
@@ -53,17 +53,19 @@
     "file-loader": "^1.1.11",
     "jshint": "^2.9.5",
     "moment-locales-webpack-plugin": "^1.0.7",
-    "node-sass": "^7.0.0",
+    "sass": "^1.32.13",
     "sass-loader": "^7.0.3",
     "style-loader": "^0.21.0",
     "url-search-params-polyfill": "^2.0.1",
     "vue-loader": "^15.2.5",
     "vue-style-loader": "^3.0.3",
-    "vue-template-compiler": "^2.5.2",
-    "webpack": "^4",
+    "vue-template-compiler": "2.5.16",
+    "webpack": "4.46.0",
     "webpack-bundle-analyzer": "^3.3.2",
     "webpack-merge": "^4.1.0",
     "worker-loader": "^2.0.0"
   },
-  "resolutions": {"**/**/node-gyp": "^6.0.1" }
+  "resolutions": {
+    "**/**/node-gyp": "^6.0.1"
+  }
 }
