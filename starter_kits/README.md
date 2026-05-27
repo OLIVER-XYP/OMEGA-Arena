@@ -6,6 +6,11 @@
 * A Halite executable that enables local playtesting of your bot
 * The scripts run_game.bat (Windows) and run_game.sh (MacOS, Linux)
 
+### New combat command: structure attack
+The engine now supports attacking enemy structures (shipyard/dropoff) with command:
+`x <attacker_ship_id> <target_owner_id> <target_x> <target_y>`.
+Most updated starter kits expose helpers like `attackStructure(...)` / `attack_structure(...)`.
+
 ## Testing your bot locally
 * Run run_game.bat (Windows) and run_game.sh (MacOS, Linux) to run a game of Halite III. By default, these scripts run a game of your MyBot.py bot vs. itself.  You can modify the board size, map seed, and the opponents of test games using the CLI.
 

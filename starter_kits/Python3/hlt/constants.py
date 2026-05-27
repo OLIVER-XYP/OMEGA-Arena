@@ -14,6 +14,7 @@ def load_constants(constants):
     global INSPIRATION_ENABLED, INSPIRATION_RADIUS, INSPIRATION_SHIP_COUNT
     global INSPIRED_EXTRACT_RATIO, INSPIRED_BONUS_MULTIPLIER, INSPIRED_MOVE_COST_RATIO
     global WIDTH, HEIGHT
+    global INITIAL_HP, ATTACK_HP_DAMAGE, ATTACK_HP_SELF_DAMAGE, ATTACK_HALITE_STEAL_RATIO, HEAL_AMOUNT
 
     if 'map_width' in constants:
         WIDTH = constants['map_width']
@@ -64,6 +65,13 @@ def load_constants(constants):
 
     """An inspired ship instead spends 1/X% halite to move."""
     INSPIRED_MOVE_COST_RATIO = constants['INSPIRED_MOVE_COST_RATIO']
+
+    """Combat constants."""
+    INITIAL_HP                = constants.get('INITIAL_HP',                100)
+    ATTACK_HP_DAMAGE          = constants.get('ATTACK_HP_DAMAGE',           16)
+    ATTACK_HP_SELF_DAMAGE     = constants.get('ATTACK_HP_SELF_DAMAGE',       7)
+    ATTACK_HALITE_STEAL_RATIO = constants.get('ATTACK_HALITE_STEAL_RATIO', 0.05)
+    HEAL_AMOUNT               = constants.get('HEAL_AMOUNT',                 9)
 
 
 # TODO remove once width/height are sent by server (#78)

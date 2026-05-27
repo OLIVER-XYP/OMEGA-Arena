@@ -88,10 +88,15 @@ void CollisionEvent::update_stats(const Store &store, const Map &map,
     }
 }
 
-/**
- * Convert death event to json format
- * @param[out] json JSON to be filled with death event
- */
+void AttackEvent::to_json(nlohmann::json &json) const {
+    json = {{JSON_TYPE_KEY,       GAME_EVENT_TYPE_NAME},
+            FIELD_TO_JSON(location),
+            FIELD_TO_JSON(attacker_id),
+            FIELD_TO_JSON(target_location),
+            FIELD_TO_JSON(target_id),
+            FIELD_TO_JSON(hit)};
+}
+
 void ConstructionEvent::to_json(nlohmann::json &json) const {
     json = {{JSON_TYPE_KEY, GAME_EVENT_TYPE_NAME},
             FIELD_TO_JSON(location),

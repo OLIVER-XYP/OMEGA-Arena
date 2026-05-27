@@ -1,0 +1,97 @@
+# Strategy: CONTROL — defensive turtle with retaliation.
+# Requires competitive_engine.json (DEFEND_RETALIATION_DAMAGE > 0, ENABLE_COMBAT_COMMANDS).
+# Signature: loaded miners issue 'defend' when a raider is adjacent -> immune AND
+# reflect retaliation damage, killing the raider. No hunters, never leaves home.
+# Beats: AGGRO (raiders die attacking defended miners).
+# Loses to: ECO (weak turtle economy can't out-boom a pure economy on the open map).
+# Cycle: aggro > eco > control > aggro.
+
+# Core economy / return timing
+STOP_RATIO=0.040000
+SPAWN_END_RATIO=0.420000
+SAFE_MARGIN=2                               # use own half fully; defense (not turtling) is the counter
+END_RUSH_TURNS=30
+RETURN_BUFFER=12
+MIN_RETURN_CARGO=220
+STRATEGIC_DIST=5
+STRATEGIC_RICH=550
+STRATEGIC_EFF_THRESH=20.000000
+RETURN_CLOSE=0.550000
+RETURN_FAR=0.830000
+RETURN_DIST=15
+
+# Mining / target search — narrow: cede the open map (loses econ race to ECO)
+SEARCH_RADIUS_EARLY=10
+SEARCH_RADIUS_MID=8
+SEARCH_RADIUS_LATE=6
+MIN_CELL_HALITE_CONSIDER=30
+TARGET_TTL=8
+STAY_BONUS=1.080000
+LONG_DISTANCE_PENALTY=0.020000
+
+# Territorial exploration — pure turtle: never venture out, never harass ECO
+INVASION_PENALTY=2.000000
+DOMINANCE_RELAX_RATIO=9.900000
+DOMINANCE_DISABLE_RATIO=9.900000
+EXPAND_RADIUS_BONUS=0
+
+# Navigation / congestion
+ENABLE_SECONDARY_NAV=1
+CONGESTION_RADIUS=2
+CONGESTION_PENALTY=4
+ALLOW_SWAP_LIKE_ESCAPE=1
+
+# Spawn timing — balanced
+ENABLE_SPAWN_ROI=0
+SPAWN_MIN_TURNS_LEFT=90
+SPAWN_ROI_MIN=1.100000
+SPAWN_PAYBACK_TURNS=70
+SPAWN_CUTOFF_TURN_RATIO=0.120000
+SHIPYARD_TARGET_PENALTY=1.200000
+STUCK_RESET_TURNS=3
+
+# Dropoff construction — solid economy so AGGRO can't just out-mine the turtle
+ENABLE_DROPOFF=1
+MAX_DROPOFFS=2
+DROPOFF_MIN_TURN=80
+DROPOFF_MAX_TURN=780
+DROPOFF_MIN_DIST_FROM_OWN=10
+DROPOFF_SITE_RADIUS=4
+DROPOFF_MIN_LOCAL_HALITE=6000
+DROPOFF_MIN_NEARBY_SHIPS=3
+DROPOFF_MIN_PLAYER_HALITE_BUFFER=1200
+DROPOFF_EMERGENCY_RETURN_TURNS=80
+
+# Combat / attack — opportunistic only; defense (below) is the real weapon
+ENABLE_ATTACK=1
+ATTACK_ONLY_WHEN_ENABLED_BY_RULES=1
+ATTACK_RATIO=1.300000
+ATTACK_MIN_TARGET_HALITE=120
+ATTACK_MAX_SELF_HALITE_FOR_RISK=700
+ATTACK_STRUCTURE_VALUE=280
+ATTACK_SHIP_VALUE=250
+
+# Hunt mode — DISABLED: control never chases (would lose its home heal + invite losses)
+HUNT_MIN_ENEMY_HALITE=150
+HUNT_MAX_RANGE=10
+HUNT_MAX_HUNTERS=2
+HUNT_MIN_TURN=50
+LOW_HP_RETURN=35
+ATTACK_MIN_SELF_HP=45
+
+# Defense: loaded miners issue 'defend' (immune + retaliate via engine
+# DEFEND_RETALIATION_DAMAGE) when a raider is adjacent. Best-balanced setting
+# found; note this still loses to AGGRO (~80%) — see project memory: a true
+# cycle needs a combat-AI rewrite, not parameter tuning.
+DEFEND_MIN_CARGO=1000000
+DEFEND_MIN_CELL_HALITE=1000000
+DEFEND_TRIGGER_RANGE=1
+FOCUS_FIRE_MIN_SHIPS=0
+# Threat-aware banking: route loaded ships home AROUND raiders, not through them.
+# (Best-balance lever — Nash 88%. The spawn-guard SPAWN_STOP_IF_BEHIND_BY was
+# tested and left OFF: it preserved treasury but a smaller fleet hurt more.)
+THREAT_AVOID_WEIGHT=3.0
+
+# Logging / diagnostics
+ENABLE_PERIODIC_LOG=0
+LOG_PERIOD=20

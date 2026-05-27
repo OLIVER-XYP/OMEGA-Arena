@@ -1,0 +1,93 @@
+# Strategy: AGGRO — dedicated hunter fleet, full-map aggression.
+# Goal: steal cargo and kill enemy ships to deny resources and score kill credits.
+# Beats: ECO (undefended spread-out ships are easy prey).
+# Loses to: CONTROL (clustered defenders trigger Capture against scatter-attacking hunters).
+
+# Core economy / return timing
+STOP_RATIO=0.040000
+SPAWN_END_RATIO=0.420000
+SAFE_MARGIN=0                               # no territory preference: go anywhere
+END_RUSH_TURNS=30
+RETURN_BUFFER=8
+MIN_RETURN_CARGO=120                        # return early to re-deploy
+STRATEGIC_DIST=5
+STRATEGIC_RICH=550
+STRATEGIC_EFF_THRESH=20.000000
+RETURN_CLOSE=0.350000                       # return when 35% full (carry stolen loot)
+RETURN_FAR=0.500000
+RETURN_DIST=15
+
+# Mining / target search
+SEARCH_RADIUS_EARLY=10
+SEARCH_RADIUS_MID=8
+SEARCH_RADIUS_LATE=6
+MIN_CELL_HALITE_CONSIDER=30
+TARGET_TTL=8
+STAY_BONUS=1.020000                         # low: move frequently to find targets
+LONG_DISTANCE_PENALTY=0.005000             # low: willing to travel for targets
+
+# Territorial exploration — invade freely
+INVASION_PENALTY=0.000000                   # no territorial hesitation
+DOMINANCE_RELAX_RATIO=1.000000             # always in "relaxed" mode
+DOMINANCE_DISABLE_RATIO=1.000000           # territory filter fully off
+EXPAND_RADIUS_BONUS=6                       # maximum expansion into enemy half
+
+# Navigation / congestion
+ENABLE_SECONDARY_NAV=1
+CONGESTION_RADIUS=2
+CONGESTION_PENALTY=3                        # low: allow attack packs to group
+ALLOW_SWAP_LIKE_ESCAPE=1
+
+# Spawn timing — spawn quickly to build hunter fleet
+ENABLE_SPAWN_ROI=0
+SPAWN_MIN_TURNS_LEFT=90
+SPAWN_ROI_MIN=1.100000
+SPAWN_PAYBACK_TURNS=60                      # don't over-spawn into bankruptcy
+SPAWN_CUTOFF_TURN_RATIO=0.120000
+SHIPYARD_TARGET_PENALTY=0.600000           # low: ships venture far
+STUCK_RESET_TURNS=3
+
+# Dropoff construction — minimal; fewer dropoffs, more ships for combat
+ENABLE_DROPOFF=1
+MAX_DROPOFFS=1
+DROPOFF_MIN_TURN=80
+DROPOFF_MAX_TURN=780
+DROPOFF_MIN_DIST_FROM_OWN=10
+DROPOFF_SITE_RADIUS=4
+DROPOFF_MIN_LOCAL_HALITE=8000              # high bar: only build if clearly worth it
+DROPOFF_MIN_NEARBY_SHIPS=4
+DROPOFF_MIN_PLAYER_HALITE_BUFFER=1200
+DROPOFF_EMERGENCY_RETURN_TURNS=80
+
+# Combat / attack — disciplined raider, not a suicide swarm.
+# Earlier all-in build went extinct by turn ~100: it put the whole fleet on
+# hunts (no mining economy), fought to the death without healing, and threw
+# ships at near-empty targets for no loot -> starved and died, conceding 200
+# turns of free farming to ECO. A raider must sustain a war economy and hit
+# and run: live off stolen cargo, retreat to heal, only strike laden prey.
+ENABLE_ATTACK=1
+ATTACK_ONLY_WHEN_ENABLED_BY_RULES=1
+ATTACK_RATIO=1.500000                       # engage only roughly-favorable fights
+ATTACK_MIN_TARGET_HALITE=150               # only raid worthwhile (laden) ships
+ATTACK_MAX_SELF_HALITE_FOR_RISK=600
+ATTACK_STRUCTURE_VALUE=400                  # high value on hitting structures
+ATTACK_SHIP_VALUE=350                       # high value on killing ships
+
+# Hunt mode — coordinated wolfpacks, NOT a scattered swarm. Keeping ~half the
+# ships mining funds replacements and keeps the raider solvent past turn 100.
+# HUNTERS_PER_TARGET=2 is the whole point: two hunters converge on one laden
+# miner and land 2x70=140 dmg in a single turn -> KILL (>100 HP) + bank its
+# cargo via kill-credit + permanently shrink eco's mining fleet. Lone hunters
+# only bruise and the target walks home. HUNT_MAX_HUNTERS=4 = up to two packs.
+HUNT_MIN_ENEMY_HALITE=150                   # hunt only ships carrying real loot
+HUNT_MAX_RANGE=14
+HUNT_MAX_HUNTERS=4                          # up to two packs; killing power > economy here
+HUNTERS_PER_TARGET=2                        # wolfpack: 2 hits = a kill, not a bruise
+HUNT_MIN_TURN=40
+LOW_HP_RETURN=45                            # retreat to base to heal after a hit
+ATTACK_MIN_SELF_HP=45                       # don't strike below half HP (hit & run)
+FOCUS_FIRE_MIN_SHIPS=2                       # backstop: 2+ adjacent ships all strike
+
+# Logging / diagnostics
+ENABLE_PERIODIC_LOG=0
+LOG_PERIOD=20

@@ -1,4 +1,7 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
+
+# CMake 4.x drops compat with cmake_minimum_required < 3.5; override for old deps
+set(CMAKE_POLICY_VERSION_MINIMUM "3.5" CACHE STRING "" FORCE)
 
 project(environment)
 
@@ -27,22 +30,36 @@ endif()
 set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 
-include_directories(${CMAKE_SOURCE_DIR}/config)
-include_directories(${CMAKE_SOURCE_DIR}/core)
-include_directories(${CMAKE_SOURCE_DIR}/core/command)
-include_directories(${CMAKE_SOURCE_DIR}/error)
-include_directories(${CMAKE_SOURCE_DIR}/logging)
-include_directories(${CMAKE_SOURCE_DIR}/mapgen)
-include_directories(${CMAKE_SOURCE_DIR}/model)
-include_directories(${CMAKE_SOURCE_DIR}/networking/common)
-include_directories(${CMAKE_SOURCE_DIR}/replay)
-include_directories(${CMAKE_SOURCE_DIR}/util)
+set(HALITE_INCLUDE_DIRS
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/config
+    ${CMAKE_SOURCE_DIR}/core
+    ${CMAKE_SOURCE_DIR}/core/command
+    ${CMAKE_SOURCE_DIR}/core/config
+    ${CMAKE_SOURCE_DIR}/core/engine
+    ${CMAKE_SOURCE_DIR}/core/state
+    ${CMAKE_SOURCE_DIR}/events
+    ${CMAKE_SOURCE_DIR}/observers
+    ${CMAKE_SOURCE_DIR}/protocol
+    ${CMAKE_SOURCE_DIR}/rules
+    ${CMAKE_SOURCE_DIR}/rules/phases
+    ${CMAKE_SOURCE_DIR}/runtime/agents
+    ${CMAKE_SOURCE_DIR}/error
+    ${CMAKE_SOURCE_DIR}/logging
+    ${CMAKE_SOURCE_DIR}/mapgen
+    ${CMAKE_SOURCE_DIR}/model
+    ${CMAKE_SOURCE_DIR}/networking/common
+    ${CMAKE_SOURCE_DIR}/replay
+    ${CMAKE_SOURCE_DIR}/util
+)
 
 if(WIN32)
-    include_directories(${CMAKE_SOURCE_DIR}/networking/win32)
+    list(APPEND HALITE_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/networking/win32)
 else()
-    include_directories(${CMAKE_SOURCE_DIR}/networking/unix)
+    list(APPEND HALITE_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/networking/unix)
 endif()
+
+include_directories(${HALITE_INCLUDE_DIRS})
 
 if(NOT WIN32)
 add_custom_target(VERSION_CHECK
@@ -55,6 +72,15 @@ set(dirs
     ${CMAKE_SOURCE_DIR}/config
     ${CMAKE_SOURCE_DIR}/core
     ${CMAKE_SOURCE_DIR}/core/command
+    ${CMAKE_SOURCE_DIR}/core/config
+    ${CMAKE_SOURCE_DIR}/core/engine
+    ${CMAKE_SOURCE_DIR}/core/state
+    ${CMAKE_SOURCE_DIR}/events
+    ${CMAKE_SOURCE_DIR}/observers
+    ${CMAKE_SOURCE_DIR}/protocol
+    ${CMAKE_SOURCE_DIR}/rules
+    ${CMAKE_SOURCE_DIR}/rules/phases
+    ${CMAKE_SOURCE_DIR}/runtime/agents
     ${CMAKE_SOURCE_DIR}/error
     ${CMAKE_SOURCE_DIR}/logging
     ${CMAKE_SOURCE_DIR}/mapgen
@@ -72,17 +98,20 @@ endif()
 
 foreach(dir ${dirs})
     file(GLOB_RECURSE SOURCE ${dir}/*.[ch]*)
+    list(FILTER SOURCE EXCLUDE REGEX ".*/core/command/(CommandTransaction|Transaction|CommandLegacy)\\.cpp$")
     set(SOURCE_FILES "${SOURCE_FILES}" ${SOURCE})
 endforeach()
 
-include_directories(${CMAKE_SOURCE_DIR})
 set(HALITE_SOURCE_FILES "${SOURCE_FILES}" main.cpp)
+list(APPEND SOURCE_FILES ${CMAKE_SOURCE_DIR}/rules/phases/OverShipTaxPhase.cpp)
+list(APPEND SOURCE_FILES ${CMAKE_SOURCE_DIR}/rules/phases/RegenPhase.cpp)
+list(APPEND SOURCE_FILES ${CMAKE_SOURCE_DIR}/core/engine/TaskExecutor.cpp)
 
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 include(ExternalProject)
 
 configure_file(CMakeLists.txt.in deps-download/CMakeLists.txt)
-execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -Wno-dev .
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -Wno-dev -DCMAKE_POLICY_VERSION_MINIMUM=3.5 .
     RESULT_VARIABLE result
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/deps-download)
 if(result)
@@ -101,7 +130,27 @@ add_subdirectory(${EXTERNAL_INSTALL_LOCATION}/catch)
 include_directories(${EXTERNAL_INSTALL_LOCATION}/zstd/lib ${EXTERNAL_INSTALL_LOCATION}/nlohmann ${EXTERNAL_INSTALL_LOCATION}/tclap/include)
 link_directories(${EXTERNAL_INSTALL_LOCATION}/zstd/build/cmake/lib)
 
+add_library(halite_engine_core INTERFACE)
+target_include_directories(halite_engine_core INTERFACE ${HALITE_INCLUDE_DIRS})
+
+add_library(halite_engine_rules INTERFACE)
+target_include_directories(halite_engine_rules INTERFACE ${HALITE_INCLUDE_DIRS})
+target_link_libraries(halite_engine_rules INTERFACE halite_engine_core)
+
+add_library(halite_engine_protocol INTERFACE)
+target_include_directories(halite_engine_protocol INTERFACE ${HALITE_INCLUDE_DIRS})
+target_link_libraries(halite_engine_protocol INTERFACE halite_engine_core)
+
+add_library(halite_engine_runtime INTERFACE)
+target_include_directories(halite_engine_runtime INTERFACE ${HALITE_INCLUDE_DIRS})
+target_link_libraries(halite_engine_runtime INTERFACE halite_engine_protocol)
+
+add_library(halite_engine_replay INTERFACE)
+target_include_directories(halite_engine_replay INTERFACE ${HALITE_INCLUDE_DIRS})
+target_link_libraries(halite_engine_replay INTERFACE halite_engine_core)
+
 add_library(halite_core OBJECT ${SOURCE_FILES})
+target_include_directories(halite_core PUBLIC ${HALITE_INCLUDE_DIRS})
 
 add_executable(halite $<TARGET_OBJECTS:halite_core> main.cpp)
 if(NOT WIN32)
@@ -110,6 +159,7 @@ endif()
 
 file(GLOB_RECURSE SOURCE ${CMAKE_SOURCE_DIR}/test/*.[ch]*)
 set(TEST_FILES "${TEST_FILES}" ${SOURCE})
+list(APPEND TEST_FILES ${CMAKE_SOURCE_DIR}/test/ExecutorConsistencyTest.cpp)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug AND NOT WIN32)
     set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
@@ -120,9 +170,10 @@ else()
     add_executable(halite_test $<TARGET_OBJECTS:halite_core> ${TEST_FILES} ${CMAKE_SOURCE_DIR}/test/TestMain.cpp)
 endif()
 
+target_include_directories(halite_test PUBLIC ${HALITE_INCLUDE_DIRS})
 add_dependencies(halite_test libzstd_static)
 if(APPLE)
-    # No static linkage here - https://stackoverflow.com/questions/5259249/creating-static-mac-os-x-c-build
+    # No static linkage here - https://stackoverflow.com/questions/5259249/creating-static-mac-os-x-build
     target_link_libraries(halite pthread libzstd_static)
     target_link_libraries(halite_test pthread libzstd_static Catch2::Catch)
 elseif(MSVC)
@@ -149,3 +200,5 @@ catch_discover_tests(halite_test)
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 add_dependencies(check halite_test)
+
+

@@ -4,6 +4,7 @@
 #include "Networking.hpp"
 #include "PlayerLog.hpp"
 #include "Store.hpp"
+#include "config/GameConfig.hpp"
 #include "mapgen/Generator.hpp"
 
 namespace hlt {
@@ -26,6 +27,7 @@ class Halite final {
     Map &map;                         /**< The game map. */
     GameStatistics &game_statistics;  /**< The statistics of the game. */
     Replay &replay;                   /**< Replay instance to collect info for visualizer. */
+    GameConfig config;                /**< Per-match game configuration. */
 
     /** Friend classes have full access to game state. */
     friend class net::Networking;
@@ -46,11 +48,16 @@ public:
      * @param networking_config The networking configuration.
      * @param game_statistics The game statistics to use.
      * @param replay The game replay to use.
+     * @param config The per-match game configuration to use.
      */
     Halite(Map &map,
            const net::NetworkingConfig &networking_config,
            GameStatistics &game_statistics,
-           Replay &replay);
+           Replay &replay,
+           GameConfig config = GameConfig::from_constants());
+
+    /** Return the per-match game configuration. */
+    const GameConfig &get_config() const { return config; }
 
     /**
      * Run the game.

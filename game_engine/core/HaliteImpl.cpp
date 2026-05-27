@@ -1,8 +1,20 @@
+#include <algorithm>
+#include <cstdlib>
+#include <fstream>
 #include <future>
+#include <memory>
+#include <numeric>
 #include <set>
+#include <string>
+#include <vector>
 
 #include "HaliteImpl.hpp"
 #include "Logging.hpp"
+#include "MultiEventSink.hpp"
+#include "ReplayCollector.hpp"
+#include "StatsCollector.hpp"
+#include "TaskExecutor.hpp"
+#include "TurnStatsCollector.hpp"
 
 namespace hlt {
 
@@ -45,7 +57,10 @@ void HaliteImpl::initialize_game(const std::vector<std::string> &player_commands
 
     for (dimension_type row = 0; row < game.map.height; row++) {
         for (dimension_type col = 0; col < game.map.width; col++) {
-            game.store.map_total_energy += game.map.at(col, row).energy;
+            auto &cell = game.map.at(col, row);
+            // Snapshot the post-generation energy as the RegenPhase regrowth ceiling.
+            cell.initial_energy = cell.energy;
+            game.store.map_total_energy += cell.energy;
         }
     }
 
@@ -53,6 +68,8 @@ void HaliteImpl::initialize_game(const std::vector<std::string> &player_commands
         auto &factory = *factory_iterator++;
         auto player = game.store.player_factory.make(factory, command);
         player.energy = constants.INITIAL_ENERGY;
+        player.factory_halite = constants.INITIAL_FACTORY_HALITE;
+        player.factory_destroyed = false;
         game.game_statistics.player_statistics.emplace_back(player.id, game.rng());
         if (snapshot.players.find(player.id) != snapshot.players.end()) {
             const auto &player_snapshot = snapshot.players.at(player.id);
@@ -62,7 +79,10 @@ void HaliteImpl::initialize_game(const std::vector<std::string> &player_commands
             for (const auto &[_, dropoff_location] : player_snapshot.dropoffs) {
                 auto &cell = game.map.at(dropoff_location);
                 cell.owner = player.id;
-                player.dropoffs.emplace_back(game.store.new_dropoff(dropoff_location));
+                auto drop = game.store.new_dropoff(dropoff_location);
+                drop.halite_pool = constants.INITIAL_DROPOFF_HALITE;
+                drop.destroyed = false;
+                player.dropoffs.emplace_back(drop);
                 game.replay.full_frames.back().events.push_back(
                         std::make_unique<ConstructionEvent>(
                                 dropoff_location, player.id, Entity::id_type{0}));
@@ -100,6 +120,32 @@ void HaliteImpl::initialize_game(const std::vector<std::string> &player_commands
 /** Run the game. */
 void HaliteImpl::run_game() {
     const auto &constants = Constants::get();
+
+    const char *profiling_env = std::getenv("HALITE_TURN_PROFILE_CSV");
+    const bool profiling_enabled = profiling_env != nullptr && profiling_env[0] != '\0';
+    const std::string profiling_path = profiling_enabled ? std::string(profiling_env) : std::string{};
+    const char *scenario_env = std::getenv("HALITE_PROFILE_SCENARIO");
+    const std::string scenario_id = (scenario_env != nullptr && scenario_env[0] != '\0') ? std::string(scenario_env) : std::string("default");
+
+    const char *exec_threads_env = std::getenv("HALITE_EXEC_THREADS");
+    const bool use_thread_pool = exec_threads_env != nullptr && exec_threads_env[0] != '\0';
+    std::unique_ptr<ThreadPoolExecutor> thread_pool_executor;
+    InlineExecutor inline_executor;
+    if (use_thread_pool) {
+        const std::size_t configured_threads = std::max<std::size_t>(1, static_cast<std::size_t>(std::strtoul(exec_threads_env, nullptr, 10)));
+        thread_pool_executor = std::make_unique<ThreadPoolExecutor>(configured_threads);
+    }
+
+    const char *dynamic_gate_env = std::getenv("HALITE_EXEC_DYNAMIC_MIN_SHIPS");
+    const std::size_t dynamic_min_ships = (dynamic_gate_env != nullptr && dynamic_gate_env[0] != '\0')
+                                              ? std::max<std::size_t>(1, static_cast<std::size_t>(std::strtoul(dynamic_gate_env, nullptr, 10)))
+                                              : 40;
+
+    std::vector<TurnExecutionProfile> turn_profiles;
+
+    // Per-ship audit: only collect/write when HALITE_SHIP_AUDIT env var is set.
+    const char *audit_path = std::getenv("HALITE_SHIP_AUDIT");
+    game.store.audit_enabled = (audit_path != nullptr && audit_path[0] != '\0');
 
     ordered_id_map<Player, std::future<void>> results{};
     bool success = true;
@@ -139,6 +185,7 @@ void HaliteImpl::run_game() {
     Logging::log("Player initialization complete");
 
     for (game.turn_number = 1; game.turn_number <= constants.MAX_TURNS; game.turn_number++) {
+        game.store.current_turn = game.turn_number;
         Logging::set_turn_number(game.turn_number);
         game.logs.set_turn_number(game.turn_number);
         // Used to track the current turn number inside Event::update_stats
@@ -148,14 +195,30 @@ void HaliteImpl::run_game() {
         }, Logging::Level::Debug);
         // Create new turn struct for replay file, to be filled by further turn actions
         game.replay.full_frames.emplace_back();
-
-        // Add state of entities at start of turn.
-        // First, update inspiration flags, so they can be used for
-        // movement/mining and so they are part of the replay.
-        update_inspiration();
         game.replay.full_frames.back().add_entities(game.store);
 
-        process_turn();
+        TurnExecutionProfile turn_profile{};
+
+        TaskExecutor *selected_executor = &inline_executor;
+        if (use_thread_pool) {
+            if (dynamic_min_ships == 0) {
+                selected_executor = thread_pool_executor.get();
+            } else {
+                std::size_t live_ship_count = 0;
+                for (const auto &[player_id, player] : game.store.players) {
+                    (void)player_id;
+                    live_ship_count += player.entities.size();
+                }
+                selected_executor = live_ship_count >= dynamic_min_ships
+                                        ? static_cast<TaskExecutor *>(thread_pool_executor.get())
+                                        : static_cast<TaskExecutor *>(&inline_executor);
+            }
+        }
+
+        process_turn(*selected_executor, profiling_enabled ? &turn_profile : nullptr);
+        if (profiling_enabled) {
+            turn_profiles.push_back(std::move(turn_profile));
+        }
 
         // Add end of frame state.
         game.replay.full_frames.back().add_end_state(game.store);
@@ -167,9 +230,7 @@ void HaliteImpl::run_game() {
     }
     game.game_statistics.number_turns = game.turn_number;
 
-    // Add state of entities at end of game.
     game.replay.full_frames.emplace_back();
-    update_inspiration();
     game.replay.full_frames.back().add_entities(game.store);
     update_player_stats();
     game.replay.full_frames.back().add_end_state(game.store);
@@ -184,10 +245,121 @@ void HaliteImpl::run_game() {
             game.networking.kill_player(player);
         }
     }
+
+    if (profiling_enabled) {
+        bool need_header = true;
+        {
+            std::ifstream probe(profiling_path);
+            if (probe.good() && probe.peek() != std::ifstream::traits_type::eof()) {
+                need_header = false;
+            }
+        }
+        std::ofstream out(profiling_path, std::ios::app);
+        if (out) {
+            if (need_header) {
+                out << "scenario,executor,threads,turn,total_turn_ns,parallel_for_calls,total_items_processed,phase,phase_ns\n";
+            }
+            for (std::size_t turn_index = 0; turn_index < turn_profiles.size(); ++turn_index) {
+                const auto &profile = turn_profiles[turn_index];
+                for (const auto &phase_timing : profile.phase_timings) {
+                    out << scenario_id << ',' << profile.executor_type << ',' << profile.executor_thread_count
+                        << ',' << (turn_index + 1) << ',' << profile.total_turn_ns << ','
+                        << profile.executor_stats.parallel_for_calls << ',' << profile.executor_stats.total_items_processed << ','
+                        << phase_timing.phase_name << ',' << phase_timing.duration_ns << "\n";
+                }
+            }
+        }
+
+        std::vector<long long> total_turn_ns_values;
+        total_turn_ns_values.reserve(turn_profiles.size());
+        for (const auto &profile : turn_profiles) {
+            total_turn_ns_values.push_back(profile.total_turn_ns);
+        }
+        std::sort(total_turn_ns_values.begin(), total_turn_ns_values.end());
+
+        auto percentile_at = [&](double p) -> long long {
+            if (total_turn_ns_values.empty()) {
+                return 0;
+            }
+            const double max_index = static_cast<double>(total_turn_ns_values.size() - 1);
+            const auto idx = static_cast<std::size_t>(std::max(0.0, std::min(max_index, p * max_index)));
+            return total_turn_ns_values[idx];
+        };
+
+        const long long total_ns = std::accumulate(total_turn_ns_values.begin(), total_turn_ns_values.end(), 0LL);
+        const long long avg_ns = total_turn_ns_values.empty() ? 0 : total_ns / static_cast<long long>(total_turn_ns_values.size());
+        const long long p50_ns = percentile_at(0.50);
+        const long long p95_ns = percentile_at(0.95);
+        const long long p99_ns = percentile_at(0.99);
+
+        const std::string summary_path = profiling_path + ".summary.csv";
+        bool need_summary_header = true;
+        {
+            std::ifstream probe(summary_path);
+            if (probe.good() && probe.peek() != std::ifstream::traits_type::eof()) {
+                need_summary_header = false;
+            }
+        }
+        std::ofstream summary(summary_path, std::ios::app);
+        if (summary) {
+            if (need_summary_header) {
+                summary << "scenario,executor,threads,turns,avg_turn_ns,p50_turn_ns,p95_turn_ns,p99_turn_ns\n";
+            }
+            const std::string executor_name = turn_profiles.empty() ? std::string("unknown") : turn_profiles.front().executor_type;
+            const std::size_t thread_count = turn_profiles.empty() ? 0 : turn_profiles.front().executor_thread_count;
+            summary << scenario_id << ',' << executor_name << ',' << thread_count << ','
+                    << total_turn_ns_values.size() << ',' << avg_ns << ',' << p50_ns << ',' << p95_ns << ',' << p99_ns << "\n";
+        }
+    }
+
+    // Per-ship audit: capture survivors with survived=true, then dump CSV.
+    if (game.store.audit_enabled) {
+        const auto final_turn = game.turn_number;
+        for (auto &[entity_id, entity] : game.store.entities) {
+            (void)entity_id;
+            game.store.ship_audits.push_back(Store::ShipAudit{
+                static_cast<int>(entity.owner.value),
+                static_cast<long>(entity.id.value),
+                entity.spawn_turn,
+                final_turn,
+                entity.lifetime_deposited,
+                entity.enemy_halite_taken,
+                entity.enemy_hp_dealt,
+                true
+            });
+        }
+        if (const char *audit_path = std::getenv("HALITE_SHIP_AUDIT")) {
+            const char *seed_env = std::getenv("HALITE_AUDIT_SEED");
+            const std::string seed_str = (seed_env != nullptr) ? std::string(seed_env) : std::string("");
+            // Write header only if the file is new/empty (so multiple game
+            // invocations appending to the same CSV don't sprinkle headers).
+            bool need_header = true;
+            {
+                std::ifstream probe(audit_path);
+                if (probe.good() && probe.peek() != std::ifstream::traits_type::eof()) {
+                    need_header = false;
+                }
+            }
+            std::ofstream out(audit_path, std::ios::app);
+            if (out) {
+                if (need_header) {
+                    out << "seed,player,entity,spawn_turn,death_turn,deposited,halite_taken,hp_dealt,survived\n";
+                }
+                for (const auto &a : game.store.ship_audits) {
+                    out << seed_str << ',' << a.player_id << ',' << a.entity_id << ',' << a.spawn_turn
+                        << ',' << a.death_turn << ',' << a.lifetime_deposited
+                        << ',' << a.enemy_halite_taken << ',' << a.enemy_hp_dealt
+                        << ',' << (a.survived ? 1 : 0) << "\n";
+                }
+            }
+        }
+    }
 }
 
 /** Retrieve and process commands, and update the game state for the current turn. */
-void HaliteImpl::process_turn() {
+void HaliteImpl::process_turn(TaskExecutor &executor, TurnExecutionProfile *profile) {
+    // Reset HP-death flag; checked by game_ended() after this turn completes.
+    game.store.any_ship_hp_zeroed = false;
     // Retrieve all commands
     using Commands = std::vector<std::unique_ptr<Command>>;
     ordered_id_map<Player, Commands> commands{};
@@ -204,196 +376,32 @@ void HaliteImpl::process_turn() {
         try {
             commands[player_id] = result.get();
         } catch (const BotError &e) {
+            (void)e;
             kill_player(player_id);
             commands.erase(player_id);
         }
     }
 
-    // Process valid player commands, removing players if they submit invalid ones.
-    std::unordered_set<Entity::id_type> changed_entities;
-    while (!commands.empty()) {
-        changed_entities.clear();
-        game.store.changed_cells.clear();
+    GameState state{game.store, game.map, game.game_statistics};
+    state.turn.number = game.turn_number;
+    observers::ReplayCollector replay_collector{game.replay};
+    observers::StatsCollector stats_collector{game.game_statistics, game.store, game.map};
+    events::MultiEventSink sink;
+    sink.add(replay_collector);
+    sink.add(stats_collector);
+    auto step_result = turn_engine_.step(state, commands, sink, executor, profile);
+    observers::TurnStatsCollector turn_stats_collector;
+    turn_stats_collector.collect(state, GameConfig::from_constants(), executor);
 
-        CommandTransaction transaction{game.store, game.map};
-        std::unordered_set<Player::id_type> offenders;
-        transaction.on_event([&frames = game.replay.full_frames, this](GameEvent event) {
-            event->update_stats(game.store, game.map, game.game_statistics);
-            // Create new game event for replay file.
-            frames.back().events.push_back(std::move(event));
-        });
-        transaction.on_error([&offenders, &commands, this](CommandError error) {
-            this->handle_error(offenders, commands, std::move(error));
-        });
-        transaction.on_cell_update([&changed_cells = game.store.changed_cells](Location cell) {
-            changed_cells.emplace(cell);
-        });
-        transaction.on_entity_update([&changed_entities](Entity::id_type entity) {
-            changed_entities.emplace(entity);
-        });
-
-        for (const auto &[player_id, command_list] : commands) {
-            auto &player = game.store.players.find(player_id)->second;
-            for (const auto &command : command_list) {
-                command->add_to_transaction(player, transaction);
-            }
-        }
-        if (transaction.check()) {
-            // All commands are successful.
-            transaction.commit();
-            if (Constants::get().STRICT_ERRORS) {
-                if (!offenders.empty()) {
-                    std::ostringstream stream;
-                    stream << "Command processing failed for players: ";
-                    for (auto iterator = offenders.begin(); iterator != offenders.end(); iterator++) {
-                        stream << *iterator;
-                        if (std::next(iterator) != offenders.end()) {
-                            stream << ", ";
-                        }
-                    }
-                    stream << ", aborting due to strict error check";
-                    Logging::log(stream.str(), Logging::Level::Error);
-                    game.turn_number = Constants::get().MAX_TURNS;
-                    return;
-                }
-            } else {
-                assert(offenders.empty());
-            }
-            // Add player commands to replay and note players still alive
-            game.replay.full_frames.back().moves = std::move(commands);
-            break;
-        } else {
-            for (auto player : offenders) {
-                kill_player(player);
-                commands.erase(player);
-            }
+    for (auto player_id : step_result.eliminated_players) {
+        if (game.store.players.find(player_id) != game.store.players.end()) {
+            kill_player(player_id);
         }
     }
 
-    // Resolve ship mining
-    const auto max_energy = Constants::get().MAX_ENERGY;
-    const auto ships_threshold = Constants::get().SHIPS_ABOVE_FOR_CAPTURE;
-    const auto bonus_multiplier = Constants::get().INSPIRED_BONUS_MULTIPLIER;
-    for (auto &[entity_id, entity] : game.store.entities) {
-        if (changed_entities.find(entity_id) == changed_entities.end()
-            && entity.energy < max_energy) {
-            // Allow this entity to extract
-            const auto location = game.store.get_player(entity.owner).get_entity_location(entity_id);
-            auto &cell = game.map.at(location);
-
-            const auto ratio = entity.is_inspired ?
-                Constants::get().INSPIRED_EXTRACT_RATIO :
-                Constants::get().EXTRACT_RATIO;
-            energy_type extracted = static_cast<energy_type>(
-                std::ceil(static_cast<double>(cell.energy) / ratio));
-            energy_type gained = extracted;
-
-            // If energy is small, give it all to the entity.
-            if (extracted == 0 && cell.energy > 0) {
-                extracted = gained = cell.energy;
-            }
-
-            // Don't take more than the entity can hold.
-            if (extracted + entity.energy > max_energy) {
-                extracted = max_energy - entity.energy;
-            }
-
-            // Apply bonus for inspired entities
-            if (entity.is_inspired && bonus_multiplier > 0) {
-                gained += bonus_multiplier * gained;
-            }
-
-            // Do not allow entity to exceed capacity.
-            if (max_energy - entity.energy < gained) {
-                gained = max_energy - entity.energy;
-            }
-            auto &player_stats = game.game_statistics.player_statistics.at(entity.owner.value);
-            player_stats.total_mined += extracted;
-            player_stats.total_bonus += gained > extracted ? gained - extracted : 0;
-            if (entity.was_captured) {
-                player_stats.total_mined_from_captured += gained;
-            }
-            entity.energy += gained;
-            cell.energy -= extracted;
-            game.store.map_total_energy -= extracted;
-            game.store.changed_cells.emplace(location);
-        }
-    }
-
-    // Resolve ship capture
-    if (Constants::get().CAPTURE_ENABLED) {
-        const auto capture_radius = Constants::get().CAPTURE_RADIUS;
-        std::unordered_map<Location, Player::id_type> entity_switches;
-        for (const auto &[player_id, player] : game.store.players) {
-            for (const auto &[entity_id, location] : player.entities) {
-                id_map<Player, unsigned long> ships_in_radius;
-                for(const auto &[pid, _] : game.store.players) ships_in_radius[pid] = 0;
-
-                std::unordered_set<Location> visited_locs{};
-                std::unordered_set<Location> to_visit_locs{location};
-                while(!to_visit_locs.empty()) {
-                    const Location cur = *to_visit_locs.begin();
-                    visited_locs.emplace(cur);
-                    to_visit_locs.erase(to_visit_locs.begin());
-
-                    Cell cur_cell = game.map.at(cur);
-                    if(cur_cell.entity != Entity::None) {
-                        ships_in_radius[game.store.get_entity(cur_cell.entity).owner]++;
-                    }
-
-                    for(const Location &neighbor : game.map.get_neighbors(cur)) {
-                        if((visited_locs.find(neighbor) == visited_locs.end())
-                           && (to_visit_locs.find(neighbor) == to_visit_locs.end())) {
-                            if(game.map.distance(location, neighbor) <= capture_radius) {
-                                to_visit_locs.emplace(neighbor);
-                            } else {
-                                visited_locs.emplace(neighbor);
-                            }
-                        }
-                    }
-                }
-
-                unsigned long max_val = 0;
-                Player::id_type max_id = Player::None;
-                for(const auto &[pid, val] : ships_in_radius) {
-                    if(pid != player_id && val > max_val) {
-                        max_val = val;
-                        max_id = pid;
-                    }
-                }
-                if(ships_in_radius[player_id]+ships_threshold <= max_val) {
-                    entity_switches[location] = max_id;
-                }
-            }
-        }
-
-        // Flip the ships that have been captured
-        for(const auto &[location, new_player_id] : entity_switches) {
-            auto &cell = game.map.at(location);
-            const auto entity = game.store.get_entity(cell.entity);
-
-            game.game_statistics.player_statistics.at(entity.owner.value).ships_given++;
-            game.game_statistics.player_statistics.at(new_player_id.value).ships_captured++;
-
-            game.store.delete_entity(entity.id);
-            auto &entities = game.store.get_player(entity.owner).entities;
-            entities.erase(entities.find(entity.id));
-
-            auto new_entity = game.store.new_entity(entity.energy, new_player_id);
-            // XXX new_entity seems to be a copy not a real reference
-            cell.entity = new_entity.id;
-            game.store.get_entity(new_entity.id).was_captured = true;
-            game.store.get_player(new_player_id).add_entity(new_entity.id, location);
-
-            game.replay.full_frames.back().events.push_back(
-                                                            std::make_unique<CaptureEvent>(location, entity.owner, entity.id,
-                                                                                           new_player_id, new_entity.id));
-        }
-    }
-
-
+    game.store.changed_cells = step_result.changed_cells;
+    game.replay.full_frames.back().moves = std::move(commands);
     game.replay.full_frames.back().add_cells(game.map, game.store.changed_cells);
-    update_player_stats();
 }
 
 void HaliteImpl::update_inspiration() {
@@ -461,35 +469,20 @@ bool HaliteImpl::player_can_play(const Player &player) const {
  * @return True if the game has ended.
  */
 bool HaliteImpl::game_ended() const {
-    if (game.store.map_total_energy == 0) {
-        auto all_entities = game.store.all_entities();
-        return std::all_of(all_entities.begin(),
-                           all_entities.end(),
-                           [](const auto& entity) {
-                               return entity.second.energy == 0;
-                           });
-    }
-    long num_alive_players = 0;
-    for (auto &&[player_id, player] : game.store.players) {
-        bool can_play = player_can_play(player);
-        if (!player.terminated && player.can_play && !can_play) {
-            Logging::log("player has insufficient resources to continue", Logging::Level::Info, player.id);
-            player.can_play = false;
-            // Update 'last turn alive' one last time (liveness lasts
-            // to the end of a turn in which player makes a valid move)
-            auto& stats = game.game_statistics.player_statistics[player_id.value];
-            stats.last_turn_alive = game.turn_number;
-        }
-        if (!player.terminated && can_play) {
-            num_alive_players++;
-        }
-    }
+    for (const auto &[player_id, player] : game.store.players) {
+        (void)player_id;
+        if (player.terminated) continue;
 
-    if (num_alive_players > 1) {
-        return false;
+        energy_type structure_total = player.factory_halite;
+        for (const auto &dropoff : player.dropoffs) {
+            structure_total += dropoff.halite_pool;
+        }
+
+        if (structure_total == 0) {
+            return true;
+        }
     }
-    // If there is only one player in the game, then let them keep playing.
-    return !(game.store.players.size() == 1 && num_alive_players == 1);
+    return false;
 }
 
 /**
@@ -510,7 +503,11 @@ void HaliteImpl::update_player_stats() {
                     player_stats.carried_at_end += game.store.get_entity(_entity_id).energy;
                 }
             }
-            player_stats.turn_productions.push_back(player.energy);
+            energy_type structure_score = player.factory_halite;
+            for (const auto &dropoff : player.dropoffs) {
+                structure_score += dropoff.halite_pool;
+            }
+            player_stats.turn_productions.push_back(structure_score);
             player_stats.turn_deposited.push_back(player.total_energy_deposited);
             player_stats.number_dropoffs = player.dropoffs.size();
             player_stats.ships_peak = std::max(player_stats.ships_peak, (long)player.entities.size());
@@ -525,10 +522,11 @@ void HaliteImpl::update_player_stats() {
                 }
             }
 
-            player_stats.halite_per_dropoff[player.factory] = player.factory_energy_deposited;
-            player_stats.total_production = player.total_energy_deposited;
+            player_stats.halite_per_dropoff[player.factory] = player.factory_halite;
+            player_stats.total_production = player.factory_halite;
             for (const auto &dropoff : player.dropoffs) {
-                player_stats.halite_per_dropoff[dropoff.location] = dropoff.deposited_halite;
+                player_stats.halite_per_dropoff[dropoff.location] = dropoff.halite_pool;
+                player_stats.total_production += dropoff.halite_pool;
             }
         } else {
             player_stats.turn_productions.push_back(0);
@@ -611,7 +609,7 @@ void HaliteImpl::kill_player(const Player::id_type &player_id) {
  * Construct HaliteImpl from game interface.
  * @param game The game interface.
  */
-HaliteImpl::HaliteImpl(Halite &game) : game(game) {}
+HaliteImpl::HaliteImpl(Halite &game) : game(game), turn_engine_(game.get_config()) {}
 
 /**
  * Handle a player command error.

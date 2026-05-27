@@ -27,16 +27,17 @@ SCENARIO("Entity constructor initializes member variables", "[entity]") {
         WHEN("converted to json") {
             nlohmann::json json;
             to_json(json, entity);
-            THEN("json has id and energy of correct value") {
+            THEN("json has id, energy, and hp of correct value") {
                 REQUIRE(json.at("id") == 1);
                 REQUIRE(json.at("energy") == 10);
+                REQUIRE(json.at("hp") == Constants::get().INITIAL_HP);
             }
         }
         WHEN("converted to bot serial format") {
             std::stringstream stream;
             stream << entity;
-            THEN("output has id and energy of correct values") {
-                REQUIRE(stream.str() == "1 10");
+            THEN("output has id, energy, and hp of correct values") {
+                REQUIRE(stream.str() == "1 10 100");
             }
         }
     }

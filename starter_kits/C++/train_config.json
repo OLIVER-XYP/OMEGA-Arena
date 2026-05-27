@@ -1,0 +1,50 @@
+{
+  "root": "E:/Halite-III",
+  "cpp_dir": "starter_kits/C++",
+  "bot_exe": "starter_kits/C++/build_cmake/Release/MyBot.exe",
+  "engine_exe": "game_engine/build/Release/halite.exe",
+  "engine_config": "starter_kits/C++/train_engine_cap7.json",
+  "base_params_file": "starter_kits/C++/bot_params.txt",
+  "out_dir": "starter_kits/C++/train_runs",
+  "maps": [32, 40, 48],
+  "turn_limit": 300,
+  "opponent_seeds": [54321, 67890, 24680],
+  "bools": ["ENABLE_DROPOFF", "ENABLE_ATTACK", "ENABLE_SPAWN_ROI", "ENABLE_SECONDARY_NAV"],
+  "parameter_groups": {
+    "important": {
+      "RETURN_FAR": [0.60, 0.92, 0.04],
+      "RETURN_CLOSE": [0.40, 0.75, 0.05],
+      "SPAWN_ROI_MIN": [0.85, 1.55, 0.05],
+      "SEARCH_RADIUS_MID": [4, 14, 2],
+      "DROPOFF_MIN_LOCAL_HALITE": [3500, 12000, 500],
+      "ATTACK_RATIO": [1.10, 2.30, 0.15]
+    },
+    "medium": {
+      "MIN_RETURN_CARGO": [120, 520, 40],
+      "RETURN_BUFFER": [4, 24, 2],
+      "STOP_RATIO": [0.01, 0.10, 0.01],
+      "TARGET_TTL": [2, 16, 2],
+      "SPAWN_MIN_TURNS_LEFT": [40, 180, 10],
+      "SPAWN_PAYBACK_TURNS": [40, 140, 10],
+      "SPAWN_CUTOFF_TURN_RATIO": [0.06, 0.20, 0.02],
+      "DROPOFF_MIN_NEARBY_SHIPS": [1, 6, 1],
+      "ATTACK_MIN_TARGET_HALITE": [50, 400, 25]
+    },
+    "minor": {
+      "STAY_BONUS": [0.98, 1.20, 0.02],
+      "LONG_DISTANCE_PENALTY": [0.00, 0.08, 0.005],
+      "CONGESTION_PENALTY": [0, 30, 3],
+      "SHIPYARD_TARGET_PENALTY": [0.0, 2.4, 0.2],
+      "STUCK_RESET_TURNS": [2, 8, 1],
+      "INVASION_PENALTY": [0.0, 1.2, 0.1],
+      "EXPAND_RADIUS_BONUS": [0, 6, 1],
+      "ATTACK_SHIP_VALUE": [80, 420, 20],
+      "ATTACK_STRUCTURE_VALUE": [80, 520, 20]
+    }
+  },
+  "reward_candidates": [
+    {"win_bonus": 1200.0, "tie_bonus": 250.0, "loss_penalty": -900.0, "score_margin_weight": 0.20, "score_abs_weight": 0.02, "draw_penalty": 120.0},
+    {"win_bonus": 1400.0, "tie_bonus": 200.0, "loss_penalty": -1000.0, "score_margin_weight": 0.25, "score_abs_weight": 0.02, "draw_penalty": 160.0},
+    {"win_bonus": 1000.0, "tie_bonus": 300.0, "loss_penalty": -800.0, "score_margin_weight": 0.15, "score_abs_weight": 0.03, "draw_penalty": 90.0}
+  ]
+}

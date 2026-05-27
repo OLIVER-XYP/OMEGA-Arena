@@ -1,4 +1,4 @@
-import parseWorker from "worker-loader!./parseWorker.js";
+import parseWorker from "worker-loader?inline=true&fallback=false!./parseWorker.js";
 
 export function parseReplay(buffer) {
     const decoderPromise = window.TextDecoder ?

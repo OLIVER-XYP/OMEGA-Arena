@@ -58,6 +58,19 @@ Entity &Store::new_entity(energy_type energy, const Player::id_type &owner) {
 void Store::delete_entity(const Entity::id_type id) {
     auto iterator = entities.find(id);
     assert(iterator != entities.end());
+    if (audit_enabled) {
+        const auto &e = iterator->second;
+        ship_audits.push_back(ShipAudit{
+            static_cast<int>(e.owner.value),
+            static_cast<long>(e.id.value),
+            e.spawn_turn,
+            current_turn,
+            e.lifetime_deposited,
+            e.enemy_halite_taken,
+            e.enemy_hp_dealt,
+            false  // died during play
+        });
+    }
     entities.erase(iterator);
 }
 

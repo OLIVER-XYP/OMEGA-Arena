@@ -168,4 +168,31 @@ std::string SelfCollisionError<SpawnCommand>::log_message() const {
     return stream.str();
 }
 
+template<>
+std::string EntityNotFoundError<AttackCommand>::log_message() const {
+    std::ostringstream stream;
+    stream << "unknown entity "
+           << command().entity
+           << " was requested to attack";
+    return stream.str();
+}
+
+template<>
+std::string EntityNotFoundError<DefendCommand>::log_message() const {
+    std::ostringstream stream;
+    stream << "unknown entity "
+           << command().entity
+           << " was requested to defend";
+    return stream.str();
+}
+
+template<>
+std::string EntityNotFoundError<HealCommand>::log_message() const {
+    std::ostringstream stream;
+    stream << "unknown entity "
+           << command().entity
+           << " was requested to heal";
+    return stream.str();
+}
+
 }

@@ -6,8 +6,16 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
         filename: "bundle.js",
         library: "libhaliteviz",
+        libraryTarget: "window",
+        publicPath: "dist/",
     },
     devtool: "source-map",
+    resolve: {
+        alias: {
+            "path": require.resolve("path-browserify"),
+            "url": require.resolve("url/"),
+        },
+    },
     module: {
         noParse: /libzstd/,
         rules: [

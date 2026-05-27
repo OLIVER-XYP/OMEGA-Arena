@@ -14,6 +14,12 @@ struct Dropoff final : Enumerated<Dropoff> {
     /** How much halite has been deposited here so far. */
     energy_type deposited_halite{};
 
+    /** Current halite pool for base-combat rules. */
+    energy_type halite_pool{};
+
+    /** True once the dropoff has been destroyed; cannot be restored. */
+    bool destroyed{false};
+
     /**
      * Output the dropoff to a stream.
      * @param ostream The output stream.

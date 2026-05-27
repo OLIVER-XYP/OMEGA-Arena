@@ -43,7 +43,30 @@ class Store {
     std::unordered_set<Location> changed_cells{}; /**< The cells changed on the last turn. */
 
 public:
+    /** Per-ship audit record (captured on entity deletion + at game end). */
+    struct ShipAudit {
+        int player_id;
+        long entity_id;
+        unsigned long spawn_turn;
+        unsigned long death_turn;  // equal to game's final turn for survivors
+        energy_type lifetime_deposited;
+        energy_type enemy_halite_taken;
+        int enemy_hp_dealt;
+        bool survived;
+    };
+
     unsigned long long map_total_energy{}; /**< The total energy remaining on the map. */
+    bool any_ship_hp_zeroed = false;       /**< Set when a ship dies from HP damage; checked by game_ended(). */
+    unsigned long current_turn = 0;        /**< Updated by HaliteImpl each turn for audit-record timestamps. */
+    std::vector<ShipAudit> ship_audits;    /**< Per-ship audit log; only populated when HALITE_SHIP_AUDIT env var is set. */
+    bool audit_enabled = false;            /**< Toggled by HaliteImpl based on env var. */
+
+    ordered_id_map<Player, Player> &players_ref() { return players; }
+    const ordered_id_map<Player, Player> &players_ref() const { return players; }
+    id_map<Entity, Entity> &entities_ref() { return entities; }
+    const id_map<Entity, Entity> &entities_ref() const { return entities; }
+    std::unordered_set<Location> &changed_cells_ref() { return changed_cells; }
+    const std::unordered_set<Location> &changed_cells_ref() const { return changed_cells; }
 
     /**
      * Get a player by ID.

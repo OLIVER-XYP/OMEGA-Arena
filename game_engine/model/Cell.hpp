@@ -15,6 +15,7 @@ struct Cell final {
     energy_type energy{};                   /**< Energy of this Cell. */
     Entity::id_type entity = Entity::None;  /**< Entity on this Cell. */
     Player::id_type owner = Player::None;   /**< Owner of this Cell if there is one. */
+    energy_type initial_energy{};           /**< Energy at map generation; RegenPhase regrowth-ceiling reference. Not serialized. Kept last to preserve positional aggregate init. */
 
     /**
      * Convert a Cell to JSON format.

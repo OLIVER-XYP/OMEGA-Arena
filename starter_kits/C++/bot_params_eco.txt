@@ -1,0 +1,84 @@
+# Strategy: ECO — pure economy, no combat.
+# Goal: maximum halite collection via wide coverage and full mining.
+# Beats: CONTROL (outproduces passive/clustered play with map coverage).
+# Loses to: AGGRO (undefended ships are easy targets).
+
+# Core economy / return timing
+STOP_RATIO=0.040000
+SPAWN_END_RATIO=0.420000
+SAFE_MARGIN=4                               # max: stay firmly in own territory
+END_RUSH_TURNS=30
+RETURN_BUFFER=12
+MIN_RETURN_CARGO=320                        # return only when well-loaded
+STRATEGIC_DIST=5
+STRATEGIC_RICH=550
+STRATEGIC_EFF_THRESH=20.000000
+RETURN_CLOSE=0.700000                       # don't return until 70% full
+RETURN_FAR=0.900000                         # far ships wait until 90% full
+RETURN_DIST=15
+
+# Mining / target search
+SEARCH_RADIUS_EARLY=14                      # wide early search for rich cells
+SEARCH_RADIUS_MID=12                        # wide mid-game search
+SEARCH_RADIUS_LATE=6
+MIN_CELL_HALITE_CONSIDER=25
+TARGET_TTL=8
+STAY_BONUS=1.150000                         # strong incentive to mine cells fully
+LONG_DISTANCE_PENALTY=0.010000
+
+# Territorial exploration — strongly avoid enemy territory
+INVASION_PENALTY=2.000000                   # heavy penalty for entering enemy half
+DOMINANCE_RELAX_RATIO=9.900000             # effectively never invade
+DOMINANCE_DISABLE_RATIO=9.900000
+EXPAND_RADIUS_BONUS=0                       # no expansion bonus toward enemy
+
+# Navigation / congestion
+ENABLE_SECONDARY_NAV=1
+CONGESTION_RADIUS=2
+CONGESTION_PENALTY=15                       # high: spread ships out for coverage
+ALLOW_SWAP_LIKE_ESCAPE=1
+
+# Spawn timing — spawn aggressively to maximize fleet size
+ENABLE_SPAWN_ROI=0
+SPAWN_MIN_TURNS_LEFT=70                     # keep spawning until late
+SPAWN_ROI_MIN=1.000000
+SPAWN_PAYBACK_TURNS=50                      # low threshold: spawn readily
+SPAWN_CUTOFF_TURN_RATIO=0.160000
+SHIPYARD_TARGET_PENALTY=1.200000
+STUCK_RESET_TURNS=3
+
+# Dropoff construction — build more dropoffs for full-map coverage
+ENABLE_DROPOFF=1
+MAX_DROPOFFS=3
+DROPOFF_MIN_TURN=80
+DROPOFF_MAX_TURN=780
+DROPOFF_MIN_DIST_FROM_OWN=10
+DROPOFF_SITE_RADIUS=4
+DROPOFF_MIN_LOCAL_HALITE=5000               # lower bar: expand coverage early
+DROPOFF_MIN_NEARBY_SHIPS=2                  # fewer ships needed to justify dropoff
+DROPOFF_MIN_PLAYER_HALITE_BUFFER=1200
+DROPOFF_EMERGENCY_RETURN_TURNS=80
+
+# Combat / attack — REACTIVE self-defense only: swat attackers that come
+# adjacent (in eco's own half, where eco heals).  No chasing, no invading.
+# Under high ATTACK_HP_SELF_DAMAGE, raiders that over-extend into eco's home
+# territory suicide on these counter-swats, letting eco's boom out-last them.
+ENABLE_ATTACK=1
+ATTACK_ONLY_WHEN_ENABLED_BY_RULES=1
+ATTACK_RATIO=1.200000
+ATTACK_MIN_TARGET_HALITE=40                 # swat any adjacent raider
+ATTACK_MAX_SELF_HALITE_FOR_RISK=900         # defend even while carrying cargo
+ATTACK_STRUCTURE_VALUE=120
+ATTACK_SHIP_VALUE=220
+
+# Hunt mode — DISABLED: eco never chases; it only counter-attacks at home
+HUNT_MIN_ENEMY_HALITE=200
+HUNT_MAX_RANGE=3
+HUNT_MAX_HUNTERS=0
+HUNT_MIN_TURN=60
+LOW_HP_RETURN=30
+ATTACK_MIN_SELF_HP=25                       # keep swatting even when damaged
+
+# Logging / diagnostics
+ENABLE_PERIODIC_LOG=0
+LOG_PERIOD=20

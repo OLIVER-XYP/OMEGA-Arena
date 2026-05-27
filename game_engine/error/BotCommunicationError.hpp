@@ -33,6 +33,19 @@ public:
     }
 
     /**
+     * Construct BotCommunicationError from input, position and hint.
+     */
+    explicit BotCommunicationError(const std::string &bot_input,
+                                   std::iostream::pos_type position,
+                                   const std::string &hint) {
+        buffer = "failed to decode bot message: \"" + bot_input +
+                 "\" (at position " + std::to_string(position) + ")";
+        if (!hint.empty()) {
+            buffer += " | hint: " + hint;
+        }
+    }
+
+    /**
      * Get the exception description.
      * @return The exception description.
      */

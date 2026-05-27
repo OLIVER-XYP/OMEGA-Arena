@@ -132,6 +132,25 @@ public:
     virtual void update_stats(const Store &store, const Map &map, GameStatistics &stats) override;
 };
 
+/** An event for an attack action (hit or miss). */
+class AttackEvent : public BaseEvent {
+    Entity::id_type attacker_id;                              /**< Attacking ship ID. */
+    Location target_location;                                 /**< Location of target ship. */
+    Entity::id_type target_id;                                /**< Target ship ID. */
+    bool hit;                                                 /**< True if target was not defending. */
+    static constexpr auto GAME_EVENT_TYPE_NAME = "attack";
+
+public:
+    void to_json(nlohmann::json &json) const override;
+
+    AttackEvent(Location attacker_location, Entity::id_type attacker_id,
+                Location target_location, Entity::id_type target_id, bool hit)
+        : BaseEvent(attacker_location), attacker_id(attacker_id),
+          target_location(target_location), target_id(target_id), hit(hit) {}
+
+    ~AttackEvent() override = default;
+};
+
 /** An event for Dropoff construction */
 class ConstructionEvent : public BaseEvent {
     Player::id_type owner_id;   /**< ID of owner of dropoff point */

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.2)
+cmake_minimum_required(VERSION 3.10)
 
 project(deps-download NONE)
 
@@ -45,7 +45,7 @@ ExternalProject_Add(zstd-download
     URL_HASH SHA256=76f3e6cadd9e1714cad7b550e53b82d4a5a5f9e08fbc0b3eb54abd0d0ebeb42d
     PREFIX ${EXTERNAL_INSTALL_LOCATION}
     SOURCE_DIR        ${EXTERNAL_INSTALL_LOCATION}/zstd
-    CONFIGURE_COMMAND "${CMAKE_COMMAND}" ${EXTERNAL_INSTALL_LOCATION}/zstd/build/cmake/
+    CONFIGURE_COMMAND "${CMAKE_COMMAND}" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 ${EXTERNAL_INSTALL_LOCATION}/zstd/build/cmake/
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
     UPDATE_COMMAND ""

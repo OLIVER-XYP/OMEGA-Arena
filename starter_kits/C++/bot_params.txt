@@ -1,0 +1,81 @@
+# ML-safe bot parameters for cap=7 benchmark.
+# Small-map ship cap is hard-coded to 7 in MyBot.cpp and intentionally not tunable.
+# Format: KEY=value    # range [min, max], independent knob
+# Values are clamped again in bot_params.hpp, so bad ML samples should not crash training.
+
+# Core economy / return timing
+STOP_RATIO=0.040000                         # [0.01, 0.12]
+SPAWN_END_RATIO=0.420000                    # [0.20, 0.70]
+SAFE_MARGIN=1                               # [0, 4]
+END_RUSH_TURNS=30                           # [10, 80]
+RETURN_BUFFER=12                            # [2, 30]
+MIN_RETURN_CARGO=220                        # [80, 700]
+STRATEGIC_DIST=5                            # [2, 12]
+STRATEGIC_RICH=550                          # [250, 900]
+STRATEGIC_EFF_THRESH=20.000000              # [5.0, 60.0]
+RETURN_CLOSE=0.550000                       # [0.30, 0.85]
+RETURN_FAR=0.830000                         # [0.45, 0.98], clamped >= RETURN_CLOSE
+RETURN_DIST=15                              # [6, 28]
+
+# Mining / target search
+SEARCH_RADIUS_EARLY=10                      # [4, 16]
+SEARCH_RADIUS_MID=8                         # [4, 16]
+SEARCH_RADIUS_LATE=6                        # [3, 14]
+MIN_CELL_HALITE_CONSIDER=30                 # [5, 150]
+TARGET_TTL=8                                # [2, 20]
+STAY_BONUS=1.080000                         # [0.90, 1.30]
+LONG_DISTANCE_PENALTY=0.020000              # [0.00, 0.12]
+
+# Territorial exploration
+INVASION_PENALTY=0.400000                   # [0.00, 2.00]
+DOMINANCE_RELAX_RATIO=1.300000              # [1.00, 2.50]
+DOMINANCE_DISABLE_RATIO=1.800000            # [DOMINANCE_RELAX_RATIO, 4.00]
+EXPAND_RADIUS_BONUS=4                       # [0, 8]
+
+# Navigation / congestion
+ENABLE_SECONDARY_NAV=1                      # {0, 1}
+CONGESTION_RADIUS=2                         # [1, 4]
+CONGESTION_PENALTY=12                       # [0, 50]
+ALLOW_SWAP_LIKE_ESCAPE=1                    # {0, 1}
+
+# Spawn timing / ROI only; ship count cap itself is fixed at 7
+ENABLE_SPAWN_ROI=0                          # {0, 1}
+SPAWN_MIN_TURNS_LEFT=90                     # [20, 220]
+SPAWN_ROI_MIN=1.100000                      # [0.75, 2.00]
+SPAWN_PAYBACK_TURNS=70                      # [20, 180]
+SPAWN_CUTOFF_TURN_RATIO=0.120000            # [0.05, 0.25]
+SHIPYARD_TARGET_PENALTY=1.200000            # [0.00, 3.00]
+STUCK_RESET_TURNS=3                         # [1, 10]
+
+# Dropoff construction
+ENABLE_DROPOFF=1                            # {0, 1}
+MAX_DROPOFFS=2                              # [0, 4]
+DROPOFF_MIN_TURN=80                         # [20, 220]
+DROPOFF_MAX_TURN=780                        # [DROPOFF_MIN_TURN, 900]
+DROPOFF_MIN_DIST_FROM_OWN=10                # [5, 24]
+DROPOFF_SITE_RADIUS=4                       # [2, 8]
+DROPOFF_MIN_LOCAL_HALITE=6000               # [2000, 16000]
+DROPOFF_MIN_NEARBY_SHIPS=3                  # [1, 8]
+DROPOFF_MIN_PLAYER_HALITE_BUFFER=1200       # [0, 4000]
+DROPOFF_EMERGENCY_RETURN_TURNS=80           # [20, 160]
+
+# Combat / attack
+ENABLE_ATTACK=1                             # {0, 1}
+ATTACK_ONLY_WHEN_ENABLED_BY_RULES=1         # {0, 1}
+ATTACK_RATIO=1.550000                       # [0.80, 3.00]
+ATTACK_MIN_TARGET_HALITE=120                # [0, 800]
+ATTACK_MAX_SELF_HALITE_FOR_RISK=700         # [0, 1000]
+ATTACK_STRUCTURE_VALUE=260                  # [0, 800]
+ATTACK_SHIP_VALUE=180                       # [0, 800]
+
+# Hunt mode
+HUNT_MIN_ENEMY_HALITE=200                   # [0, 900]
+HUNT_MAX_RANGE=10                           # [2, 20]
+HUNT_MAX_HUNTERS=2                          # [0, 6]
+HUNT_MIN_TURN=60                            # [0, 250]
+LOW_HP_RETURN=30                            # [0, 100]
+ATTACK_MIN_SELF_HP=50                       # [0, 100]
+
+# Logging / diagnostics
+ENABLE_PERIODIC_LOG=0                       # {0, 1}
+LOG_PERIOD=20                               # [1, 200]

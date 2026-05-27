@@ -3,11 +3,12 @@
 
 #include <queue>
 
-#include "CommandTransaction.hpp"
+#include "TurnEngine.hpp"
 #include "Halite.hpp"
 #include "Replay.hpp"
 #include "Snapshot.hpp"
 #include "BotError.hpp"
+#include "CommandError.hpp"
 
 namespace hlt {
 
@@ -17,6 +18,7 @@ class HaliteImpl final {
 
     /** The game interface. */
     Halite &game;
+    TurnEngine turn_engine_;
 
     /**
      * Initialize the game.
@@ -71,7 +73,7 @@ class HaliteImpl final {
     void update_inspiration();
 
     /** Retrieve and process commands, and update the game state for the current turn. */
-    void process_turn();
+    void process_turn(TaskExecutor &executor, TurnExecutionProfile *profile = nullptr);
 
     /** Remove a player from the game. */
     void kill_player(const Player::id_type &player_id);

@@ -9,157 +9,96 @@
 
 namespace hlt {
 
-class CommandTransaction;
-
 /** Abstract type of commands issued by the user. */
 class Command {
 public:
     /** The command names. */
     enum Name : char {
         Move = 'm',
+        Stay = 's',
         Spawn = 'g',
-        Construct = 'c'
+        Construct = 'c',
+        Attack = 'a',
+        Defend = 'd',
+        Heal = 'h',
+        AttackStructure = 'x'
     };
 
-    /**
-     * Convert to JSON format.
-     * @param[out] json The JSON output.
-     */
     virtual void to_json(nlohmann::json &json) const = 0;
-
-    /**
-     * Convert to bot serial format.
-     * @return The serialized command.
-     */
     virtual std::string to_bot_serial() const = 0;
-
-    /**
-     * Add the command to a transaction.
-     * @param player The player executing the command.
-     * @param transaction The command transaction to act on.
-     */
-    virtual void add_to_transaction(Player &player, CommandTransaction &transaction) const = 0;
-
-    /** Virtual destructor. */
     virtual ~Command() = default;
 };
 
-/** Statically polymorphic mixin for commands that may be added to a transaction. */
-template<class T>
-class TransactableCommand : public Command {
-public:
-    /**
-     * Add the command to a transaction.
-     * @param player The player executing the command.
-     * @param transaction The command transaction to act on.
-     */
-    void add_to_transaction(Player &player, CommandTransaction &transaction) const final;
-
-    /** Virtual destructor. */
-    ~TransactableCommand() override = default;
-};
-
-/**
- * Convert a Command to JSON format.
- * @param[out] json The output JSON.
- * @param command The command to convert.
- */
 void to_json(nlohmann::json &json, const Command &command);
-
-/**
- * Convert a Command ptr to JSON format.
- * @param[out] json The output JSON.
- * @param command The command to convert.
- */
 void to_json(nlohmann::json &json, const std::unique_ptr<Command> &command);
-
-/**
- * Read a Command from bot serial format.
- * @param istream The input stream.
- * @param[out] command The command to read.
- * @return The input stream.
- */
 std::istream &operator>>(std::istream &istream, std::unique_ptr<Command> &command);
-
-/**
- * Write a Command to bot serial format.
- * @param ostream The output stream.
- * @param[out] command The command to write.
- * @return The output stream.
- */
 std::ostream &operator<<(std::ostream &ostream, std::unique_ptr<Command> &command);
 
-/** Command for moving an entity in a direction. */
-class MoveCommand final : public TransactableCommand<MoveCommand> {
+class MoveCommand final : public Command {
 public:
-    const Entity::id_type entity; /**< The location of the entity. */
-    const Direction direction;    /**< The direction in which to move. */
+    const Entity::id_type entity;
+    const Direction direction;
 
-    /**
-     * Convert a MoveCommand to JSON format.
-     * @param[out] json The JSON output.
-     */
     void to_json(nlohmann::json &json) const override;
-
-    /**
-     * Convert to bot serial format.
-     * @return The serialized command.
-     */
     std::string to_bot_serial() const override;
-
-    /**
-     * Create MoveCommand from entity and direction.
-     * @param entity The location of the entity.
-     * @param direction The direction.
-     */
     MoveCommand(const Entity::id_type &entity, Direction direction) : entity(entity), direction(direction) {}
 };
 
-/** Command for spawning an entity. */
-class SpawnCommand final : public TransactableCommand<SpawnCommand> {
+class SpawnCommand final : public Command {
 public:
-    /**
-     * Convert a SpawnCommand to JSON format.
-     * @param[out] json The JSON output.
-     */
     void to_json(nlohmann::json &json) const override;
-
-    /**
-     * Convert to bot serial format.
-     * @return The serialized command.
-     */
     std::string to_bot_serial() const override;
-
-    /**
-     * Create SpawnCommand from energy.
-     * @param energy The energy to use.
-     */
     explicit SpawnCommand() {}
 };
 
-/** Command to construct a drop zone. */
-class ConstructCommand final : public TransactableCommand<ConstructCommand> {
+class ConstructCommand final : public Command {
 public:
-    /** The entity to use to construct. */
     const Entity::id_type entity;
 
-    /**
-     * Convert a ConstructCommand to JSON format.
-     * @param[out] json The JSON output.
-     */
     void to_json(nlohmann::json &json) const override;
+    std::string to_bot_serial() const override;
+    explicit ConstructCommand(const Entity::id_type &entity) : entity(entity) {}
+};
 
-    /**
-     * Convert to bot serial format.
-     * @return The serialized command.
-     */
+class AttackCommand final : public Command {
+public:
+    const Entity::id_type entity;
+    const Entity::id_type target;
+
+    bool is_structure_target;
+    Player::id_type target_structure_owner;
+    Location target_structure_location;
+
+    void to_json(nlohmann::json &json) const override;
     std::string to_bot_serial() const override;
 
-    /**
-     * Construct ConstructCommand from entity.
-     * @param entity The entity to convert.
-     */
-    explicit ConstructCommand(const Entity::id_type &entity) : entity(entity) {}
+    AttackCommand(const Entity::id_type &entity, const Entity::id_type &target)
+        : entity(entity), target(target), is_structure_target(false),
+          target_structure_owner(Player::None), target_structure_location(0, 0) {}
+
+    AttackCommand(const Entity::id_type &entity,
+                  const Player::id_type &owner,
+                  Location location)
+        : entity(entity), target(Entity::None), is_structure_target(true),
+          target_structure_owner(owner), target_structure_location(location) {}
+};
+
+class DefendCommand final : public Command {
+public:
+    const Entity::id_type entity;
+
+    void to_json(nlohmann::json &json) const override;
+    std::string to_bot_serial() const override;
+    explicit DefendCommand(const Entity::id_type &entity) : entity(entity) {}
+};
+
+class HealCommand final : public Command {
+public:
+    const Entity::id_type entity;
+
+    void to_json(nlohmann::json &json) const override;
+    std::string to_bot_serial() const override;
+    explicit HealCommand(const Entity::id_type &entity) : entity(entity) {}
 };
 
 }

@@ -1,5 +1,6 @@
 #include <future>
 #include <sstream>
+#include <utility>
 
 #include "Halite.hpp"
 #include "HaliteImpl.hpp"
@@ -18,13 +19,17 @@ namespace hlt {
 Halite::Halite(Map &map,
                const net::NetworkingConfig &networking_config,
                GameStatistics &game_statistics,
-               Replay &replay) :
+               Replay &replay,
+               GameConfig config) :
         map(map),
         game_statistics(game_statistics),
         replay(replay),
+        config(std::move(config)),
         networking(networking_config, *this),
         impl(std::make_unique<HaliteImpl>(*this)),
-        rng(replay.map_generator_seed) {}
+        rng(replay.map_generator_seed) {
+    this->config.apply_to_global_constants();
+}
 
 /**
  * Run the game.

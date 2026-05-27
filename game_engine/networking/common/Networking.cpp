@@ -124,6 +124,7 @@ std::vector<std::unique_ptr<Command>> Networking::handle_frame(Player &player) {
             message_stream << entity_id
                            << " " << location
                            << " " << entity_iterator->second.energy
+                           << " " << entity_iterator->second.hp
                            << std::endl;
         }
         // Output a list of dropoffs.

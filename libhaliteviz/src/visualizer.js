@@ -538,7 +538,8 @@ export class HaliteVisualizer {
             for (let command_key in this.currentFrame.moves[player_id]) {
                 let command = this.currentFrame.moves[player_id][command_key];
                 const command_type = command.type;
-                if (command_type === "m" || command_type === "d" || command_type === "c") {
+                if (command_type === "m" || command_type === "d" || command_type === "c" ||
+                    command_type === "a" || command_type === "h") {
                     this.current_commands[player_id][command.id] = command;
                 }
             }
@@ -624,6 +625,15 @@ export class HaliteVisualizer {
                         this.current_commands[event.owner_id] = {};
                     }
                     this.current_commands[event.owner_id][event.id] = {"type" : "g"};
+                }
+                else if (event.type === "attack") {
+                    // Draw a red beam from attacker to target
+                    this.animationQueue.push(new animation.AttackBeamAnimation({
+                        event,
+                        frame: this.frame + this.time,
+                        duration: 1.5,
+                        container: this.entityContainer,
+                    }));
                 }
                 else if (event.type === "capture") {
                     this.animationQueue.push(new animation.SpawnAnimation({

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Halite III Replay Viewer</title>
+    <!-- Empty same-origin stylesheet MUST be first so applyTheme() can insertRule safely -->
+    <style id="theme-rules"></style>
+    <!-- FontAwesome for EmbeddedVisualizer toolbar icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #12121f;
+            color: #eee;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #header {
+            width: 100%;
+            padding: 10px 18px;
+            background: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid #0f3460;
+            flex-wrap: wrap;
+        }
+        #header h1 { font-size: 1.1rem; color: #e94560; white-space: nowrap; }
+        #file-label {
+            cursor: pointer;
+            background: #e94560;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 5px;
+            font-size: 0.88rem;
+            white-space: nowrap;
+            user-select: none;
+        }
+        #file-label:hover { background: #c73652; }
+        #file-input { display: none; }
+        #status { color: #aaa; font-size: 0.83rem; }
+        #hint   { color: #555; font-size: 0.78rem; }
+
+        #wrap {
+            margin: 16px auto 0;
+            width: 90vw;
+            max-width: 880px;
+        }
+        /* Make PIXI canvas responsive */
+        #container canvas {
+            display: block;
+            width: 100% !important;
+            height: auto !important;
+        }
+        /* Always show embedded toolbar and energy bar – no hover required */
+        .embedded-toolbar { opacity: 1 !important; }
+        .embedded-clashbar { opacity: 1 !important; }
+
+        #loading {
+            display: none;
+            color: #888;
+            text-align: center;
+            padding: 50px 0;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>Halite III Replay Viewer</h1>
+        <label id="file-label" for="file-input">&#128193; 打开 .hlt 录像</label>
+        <input type="file" id="file-input" accept=".hlt">
+        <span id="status">请选择录像文件</span>
+        <span id="hint">工具栏在画面底部 &nbsp;|&nbsp; 空格=播放/暂停 &nbsp; 方向键=逐帧 &nbsp; WASD=平移 &nbsp; +/-=缩放</span>
+    </div>
+
+    <div id="wrap">
+        <div id="loading">正在加载…</div>
+        <div id="container"></div>
+    </div>
+
+    <script src="dist/bundle.js"></script>
+    <script>
+    (function () {
+        var currentViz = null;
+
+        document.getElementById('file-input').addEventListener('change', function (e) {
+            var file = e.target.files[0];
+            if (!file) return;
+
+            setStatus('正在解析 ' + file.name + '…');
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('container').innerHTML = '';
+
+            if (currentViz) {
+                try { currentViz.destroy(); } catch (x) {}
+                currentViz = null;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                libhaliteviz.parseReplay(ev.target.result).then(function (replay) {
+                    setStatus('正在加载贴图…');
+                    // setAssetRoot("") is required before constructing the visualizer:
+                    //   - webpack 5 publicPath=auto makes require() return absolute URLs
+                    //   - assets.js builds texture URLs as: ASSET_ROOT + require(png)
+                    //   - with ASSET_ROOT="" the absolute URL is used as-is (correct)
+                    //   - the default ASSET_ROOT="dist/" would prepend "dist/" to an
+                    //     already-absolute URL, breaking every texture load
+                    return libhaliteviz.setAssetRoot('').then(function () {
+                        document.getElementById('loading').style.display = 'none';
+
+                        var containerEl = document.getElementById('container');
+                        var size = Math.max(containerEl.offsetWidth || 0, 600);
+
+                        currentViz = new libhaliteviz.EmbeddedVisualizer(replay, size, size);
+                        currentViz.attach(containerEl);
+                        currentViz.play();
+
+                        var turns = replay.full_frames ? replay.full_frames.length : '?';
+                        var names = replay.players.map(function (p) { return p.name; }).join(' vs ');
+                        setStatus(file.name + ' · ' + turns + ' 回合 · ' + names);
+                    });
+                }).catch(function (err) {
+                    document.getElementById('loading').style.display = 'none';
+                    setStatus('加载失败（请按 F12 查看控制台错误）');
+                    console.error(err);
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        function setStatus(msg) {
+            document.getElementById('status').textContent = msg;
+        }
+    })();
+    </script>
+</body>
+</html>

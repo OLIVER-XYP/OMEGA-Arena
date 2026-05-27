@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 
     // Use the seed to determine default map size
     std::mt19937 rng(seed);
-    std::vector<hlt::dimension_type> map_sizes = {32, 40, 48, 56, 64};
+    std::vector<hlt::dimension_type> map_sizes = {32};
     auto base_size = map_sizes[rng() % map_sizes.size()];
     constants.DEFAULT_MAP_WIDTH = constants.DEFAULT_MAP_HEIGHT = base_size;
 
@@ -137,6 +137,13 @@ int main(int argc, char *argv[]) {
         map_parameters = snapshot.map_param;
     }
 
+    if (map_parameters.width != 32 || map_parameters.height != 32) {
+        Logging::log("Only 32x32 maps are supported in this build.", Logging::Level::Error);
+        return 1;
+    }
+    map_width = 32;
+    map_height = 32;
+
     net::NetworkingConfig networking_config{};
     networking_config.ignore_timeout = timeout_switch.getValue();
 
@@ -156,7 +163,8 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    hlt::Halite game(map, networking_config, game_statistics, replay);
+    hlt::GameConfig game_config = hlt::GameConfig::from_constants(constants);
+    hlt::Halite game(map, networking_config, game_statistics, replay, game_config);
     game.run_game(bot_commands, snapshot);
 
     const auto &overrides = override_args.getValue();
@@ -217,7 +225,10 @@ int main(int argc, char *argv[]) {
                 << std::to_string(stats.rank)
                 << " with "
                 << std::to_string(stats.turn_productions.back())
-                << " halite";
+                << " halite, ships_peak="
+                << std::to_string(stats.ships_peak)
+                << " ships_spawned="
+                << std::to_string(stats.ships_spawned);
         Logging::log(message.str());
     }
 
@@ -278,3 +289,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+

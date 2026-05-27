@@ -35,5 +35,25 @@ namespace hlt {
         extern double INSPIRED_BONUS_MULTIPLIER;
         /** An inspired ship instead spends 1/X% halite to move. */
         extern int INSPIRED_MOVE_COST_RATIO;
+
+        /** Initial HP of a newly spawned ship. */
+        extern int INITIAL_HP;
+        /** HP damage dealt to the target of an attack. */
+        extern int ATTACK_HP_DAMAGE;
+        /** HP self-damage taken by the attacker. */
+        extern int ATTACK_HP_SELF_DAMAGE;
+        /** Fraction of target's halite stolen on a successful attack. */
+        extern double ATTACK_HALITE_STEAL_RATIO;
+        /** Whether combat attack/defend commands are enabled. */
+        extern bool ENABLE_COMBAT_COMMANDS;
+
+        /** Per-ship spawn cost growth: effective cost = SHIP_COST × (1 + growth × num_ships). */
+        extern double SPAWN_COST_GROWTH;
+        /** Spawn count threshold before quadratic over-threshold growth applies. */
+        extern int SPAWN_QUAD_THRESHOLD;
+        /** Quadratic over-threshold spawn growth. */
+        extern double SPAWN_QUAD_GROWTH;
+        /** Per-dropoff cost growth: effective cost = DROPOFF_COST × (1 + growth × num_dropoffs). */
+        extern double DROPOFF_COST_GROWTH;
     }
 }
