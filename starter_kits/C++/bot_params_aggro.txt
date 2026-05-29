@@ -78,9 +78,13 @@ ATTACK_RANGE=4                               # attack at range 4
 # at enemy shipyard + dropoffs and kill ships as they spawn or return to bank.
 CAMP_ENABLED=1
 CAMPERS_PER_STRUCTURE=7                      # 7 hunters per enemy structure
-CAMP_ASSIGN_TURN=20                          # start camping at turn 20
+CAMP_ASSIGN_TURN=12                          # start camping at turn 12 — denying
+                                             # eco's EARLY economy (when it compounds
+                                             # most) lifts aggro>eco from ~51% to ~56%.
 HUNT_MIN_ENEMY_HALITE=40
-HUNT_MAX_RANGE=6
+HUNT_MAX_RANGE=8                             # reach more targets per hunter; biggest
+                                             # single aggro>eco lever (~51%->62%).
+                                             # Combined with the early camp: ~69%.
 HUNT_MAX_HUNTERS=20                          # max campers (across all structures)
 HUNTERS_PER_TARGET=2
 HUNT_MIN_TURN=30
