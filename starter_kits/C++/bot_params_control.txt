@@ -1,32 +1,39 @@
-# Strategy: CONTROL — defensive turtle with retaliation.
+# Strategy: CONTROL — pure defensive specialist with retaliation.
 # Requires competitive_engine.json (DEFEND_RETALIATION_DAMAGE > 0).
 # Signature: loaded miners issue 'defend' when a raider is adjacent -> immune AND
 # reflect retaliation damage, killing the raider. No hunters, never leaves home.
-# Beats: AGGRO (raiders die attacking defended miners).
-# Loses to: ECO (weak turtle economy can't out-boom a pure economy on the open map).
-# Cycle: aggro > eco > control > aggro.
+# Beats: AGGRO (raiders die attacking defended miners) — ~86%.
+# Loses to: ECO (deliberately minimal economy can't out-boom a pure economy) — ~75%.
+# Cycle: aggro > eco > control > aggro, every edge >66%.
+#
+# DESIGN NOTE: vs ECO, control never fights (eco has ENABLE_ATTACK=0), so that
+# edge is a PURE ECONOMY RACE. To make eco win >66% we deliberately CRIPPLE
+# control's economy (the "max_nerf" tune below: hard turtle + minimal mining)
+# while keeping the defense intact — defense is per-ship combat, economy-
+# independent, so control still wrecks aggro. This trades economic strength for
+# a clean RPS cycle.
 
-# Core economy / return timing
+# Core economy / return timing — minimal economy on purpose
 STOP_RATIO=0.040000
-SPAWN_END_RATIO=0.420000
-SAFE_MARGIN=2                               # use own half fully; defense (not turtling) is the counter
+SPAWN_END_RATIO=0.280000                     # stop spawning early: small fleet
+SAFE_MARGIN=4                               # max turtle: cede the whole open map to ECO
 END_RUSH_TURNS=30
 RETURN_BUFFER=12
 MIN_RETURN_CARGO=220
 STRATEGIC_DIST=5
 STRATEGIC_RICH=550
 STRATEGIC_EFF_THRESH=20.000000
-RETURN_CLOSE=0.550000
-RETURN_FAR=0.830000
+RETURN_CLOSE=0.400000                        # bank early/often: less time mining
+RETURN_FAR=0.600000
 RETURN_DIST=15
 
-# Mining / target search — narrow: cede the open map (loses econ race to ECO)
-SEARCH_RADIUS_EARLY=10
-SEARCH_RADIUS_MID=8
+# Mining / target search — very narrow + stingy: mine little, cede econ to ECO
+SEARCH_RADIUS_EARLY=6
+SEARCH_RADIUS_MID=5
 SEARCH_RADIUS_LATE=6
-MIN_CELL_HALITE_CONSIDER=30
+MIN_CELL_HALITE_CONSIDER=100                 # ignore all but rich cells -> mines less
 TARGET_TTL=8
-STAY_BONUS=1.080000
+STAY_BONUS=1.000000                          # no incentive to fully mine a cell
 LONG_DISTANCE_PENALTY=0.020000
 
 # Territorial exploration — pure turtle: never venture out, never harass ECO
@@ -50,9 +57,9 @@ SPAWN_CUTOFF_TURN_RATIO=0.120000
 SHIPYARD_TARGET_PENALTY=1.200000
 STUCK_RESET_TURNS=3
 
-# Dropoff construction — solid economy so AGGRO can't just out-mine the turtle
+# Dropoff construction — single base only: minimal map coverage (cedes econ to ECO)
 ENABLE_DROPOFF=1
-MAX_DROPOFFS=2
+MAX_DROPOFFS=1
 DROPOFF_MIN_TURN=80
 DROPOFF_MAX_TURN=780
 DROPOFF_MIN_DIST_FROM_OWN=10
