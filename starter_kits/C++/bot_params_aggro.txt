@@ -67,26 +67,26 @@ DROPOFF_EMERGENCY_RETURN_TURNS=80
 # and run: live off stolen cargo, retreat to heal, only strike laden prey.
 ENABLE_ATTACK=1
 ATTACK_ONLY_WHEN_ENABLED_BY_RULES=1
-ATTACK_RATIO=1.500000                       # engage only roughly-favorable fights
-ATTACK_MIN_TARGET_HALITE=150               # only raid worthwhile (laden) ships
+ATTACK_RATIO=0.800000                       # attack eagerly (mining nearby compensates)
+ATTACK_MIN_TARGET_HALITE=40                # attack any laden ship
 ATTACK_MAX_SELF_HALITE_FOR_RISK=600
 ATTACK_STRUCTURE_VALUE=400                  # high value on hitting structures
 ATTACK_SHIP_VALUE=350                       # high value on killing ships
+ATTACK_RANGE=4                               # attack at range 4
 
-# Hunt mode — coordinated wolfpacks, NOT a scattered swarm. Keeping ~half the
-# ships mining funds replacements and keeps the raider solvent past turn 100.
-# HUNTERS_PER_TARGET=2 is the whole point: two hunters converge on one laden
-# miner and land 2x70=140 dmg in a single turn -> KILL (>100 HP) + bank its
-# cargo via kill-credit + permanently shrink eco's mining fleet. Lone hunters
-# only bruise and the target walks home. HUNT_MAX_HUNTERS=4 = up to two packs.
-HUNT_MIN_ENEMY_HALITE=150                   # hunt only ships carrying real loot
-HUNT_MAX_RANGE=14
-HUNT_MAX_HUNTERS=4                          # up to two packs; killing power > economy here
-HUNTERS_PER_TARGET=2                        # wolfpack: 2 hits = a kill, not a bruise
-HUNT_MIN_TURN=40
-LOW_HP_RETURN=45                            # retreat to base to heal after a hit
-ATTACK_MIN_SELF_HP=45                       # don't strike below half HP (hit & run)
-FOCUS_FIRE_MIN_SHIPS=2                       # backstop: 2+ adjacent ships all strike
+# Camp mode — ambush near enemy structures. Zero travel time: hunters park
+# at enemy shipyard + dropoffs and kill ships as they spawn or return to bank.
+CAMP_ENABLED=1
+CAMPERS_PER_STRUCTURE=7                      # 7 hunters per enemy structure
+CAMP_ASSIGN_TURN=20                          # start camping at turn 20
+HUNT_MIN_ENEMY_HALITE=40
+HUNT_MAX_RANGE=6
+HUNT_MAX_HUNTERS=20                          # max campers (across all structures)
+HUNTERS_PER_TARGET=2
+HUNT_MIN_TURN=30
+LOW_HP_RETURN=20                             # return to heal when damaged
+ATTACK_MIN_SELF_HP=1                         # fight at any HP
+FOCUS_FIRE_MIN_SHIPS=2                       # 2+ adjacent ships coordinate
 
 # Logging / diagnostics
 ENABLE_PERIODIC_LOG=0

@@ -26,11 +26,12 @@ TARGET_TTL=8
 STAY_BONUS=1.150000                         # strong incentive to mine cells fully
 LONG_DISTANCE_PENALTY=0.010000
 
-# Territorial exploration — strongly avoid enemy territory
-INVASION_PENALTY=2.000000                   # heavy penalty for entering enemy half
-DOMINANCE_RELAX_RATIO=9.900000             # effectively never invade
-DOMINANCE_DISABLE_RATIO=9.900000
-EXPAND_RADIUS_BONUS=0                       # no expansion bonus toward enemy
+# Territorial exploration — mildly avoid enemy territory (greedy expansion
+# gives raiders targets; territorial filter still protects the iron triangle).
+INVASION_PENALTY=0.000000                   # no penalty: freely enter enemy territory
+DOMINANCE_RELAX_RATIO=1.200000             # relax when slightly dominant
+DOMINANCE_DISABLE_RATIO=0.700000           # disable when behind
+EXPAND_RADIUS_BONUS=3                       # moderate expansion bonus toward enemy
 
 # Navigation / congestion
 ENABLE_SECONDARY_NAV=1
@@ -59,15 +60,22 @@ DROPOFF_MIN_NEARBY_SHIPS=2                  # fewer ships needed to justify drop
 DROPOFF_MIN_PLAYER_HALITE_BUFFER=1200
 DROPOFF_EMERGENCY_RETURN_TURNS=80
 
-# Combat / attack — REACTIVE self-defense only: swat attackers that come
-# adjacent (in eco's own half, where eco heals).  No chasing, no invading.
-# Under high ATTACK_HP_SELF_DAMAGE, raiders that over-extend into eco's home
-# territory suicide on these counter-swats, letting eco's boom out-last them.
-ENABLE_ATTACK=1
+# Combat / attack — DISABLED. The "swat adjacent raider" code path doesn't
+# distinguish "defending in own half" from "attacking anywhere"; with eco's
+# loose ATTACK_MIN_TARGET_HALITE it routinely struck control's defending
+# miners, and DEFEND_RETALIATION_DAMAGE=100 one-shots the attacker. Eco bled
+# its fleet to retaliation every game it played control. Disabling attack
+# trades raider-deterrence for fleet preservation — the right trade for a
+# pure-economy profile.
+ENABLE_ATTACK=0                              # pure economy: no attacks. Attacking
+                                             # control's defenders triggered fatal
+                                             # retaliation (100 dmg). Without attack,
+                                             # eco preserves its fleet at the cost of
+                                             # not contesting nearby raiders directly.
 ATTACK_ONLY_WHEN_ENABLED_BY_RULES=1
 ATTACK_RATIO=1.200000
-ATTACK_MIN_TARGET_HALITE=40                 # swat any adjacent raider
-ATTACK_MAX_SELF_HALITE_FOR_RISK=900         # defend even while carrying cargo
+ATTACK_MIN_TARGET_HALITE=40
+ATTACK_MAX_SELF_HALITE_FOR_RISK=900
 ATTACK_STRUCTURE_VALUE=120
 ATTACK_SHIP_VALUE=220
 

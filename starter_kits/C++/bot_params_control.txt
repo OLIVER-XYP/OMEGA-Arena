@@ -1,5 +1,5 @@
 # Strategy: CONTROL — defensive turtle with retaliation.
-# Requires competitive_engine.json (DEFEND_RETALIATION_DAMAGE > 0, ENABLE_COMBAT_COMMANDS).
+# Requires competitive_engine.json (DEFEND_RETALIATION_DAMAGE > 0).
 # Signature: loaded miners issue 'defend' when a raider is adjacent -> immune AND
 # reflect retaliation damage, killing the raider. No hunters, never leaves home.
 # Beats: AGGRO (raiders die attacking defended miners).
@@ -80,12 +80,10 @@ LOW_HP_RETURN=35
 ATTACK_MIN_SELF_HP=45
 
 # Defense: loaded miners issue 'defend' (immune + retaliate via engine
-# DEFEND_RETALIATION_DAMAGE) when a raider is adjacent. Best-balanced setting
-# found; note this still loses to AGGRO (~80%) — see project memory: a true
-# cycle needs a combat-AI rewrite, not parameter tuning.
-DEFEND_MIN_CARGO=1000000
-DEFEND_MIN_CELL_HALITE=1000000
-DEFEND_TRIGGER_RANGE=1
+# DEFEND_RETALIATION_DAMAGE) when a raider is adjacent.
+DEFEND_MIN_CARGO=200
+DEFEND_MIN_CELL_HALITE=100
+DEFEND_TRIGGER_RANGE=4
 FOCUS_FIRE_MIN_SHIPS=0
 # Threat-aware banking: route loaded ships home AROUND raiders, not through them.
 # (Best-balance lever — Nash 88%. The spawn-guard SPAWN_STOP_IF_BEHIND_BY was

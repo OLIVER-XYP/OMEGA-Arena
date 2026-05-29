@@ -80,6 +80,7 @@ struct BotParams {
     int attack_max_self_halite_for_risk = 700;
     int attack_structure_value = 260;
     int attack_ship_value = 180;
+    int attack_range = 1;              // max distance to attack (engine ATTACK_RANGE)
 
     // Hunt
     int hunt_min_enemy_halite = 320;   // minimum enemy cargo to consider hunting
@@ -95,6 +96,13 @@ struct BotParams {
     // wolfpack corners a (preferably stationary, laden) miner and kills it in one
     // turn, banking its cargo via kill-credit AND removing it from the economy.
     int hunters_per_target = 1;
+
+    // Camp mode: instead of chasing, hunters ambush near enemy structures
+    // (shipyard + dropoffs), killing ships as they spawn or return to bank.
+    // Zero travel time — the geometric bottleneck is eliminated.
+    bool camp_enabled = false;
+    int campers_per_structure = 4;     // hunters per enemy structure
+    int camp_assign_turn = 30;         // first turn to start camping
 
     // Defensive immunity: a ship carrying >= this cargo issues a 'defend' command
     // (full attack-immunity for the turn) when an enemy ship is adjacent, instead
@@ -243,6 +251,7 @@ inline BotParams load_bot_params(const std::string &file_path) {
     p.attack_max_self_halite_for_risk = geti("ATTACK_MAX_SELF_HALITE_FOR_RISK", p.attack_max_self_halite_for_risk);
     p.attack_structure_value = geti("ATTACK_STRUCTURE_VALUE", p.attack_structure_value);
     p.attack_ship_value = geti("ATTACK_SHIP_VALUE", p.attack_ship_value);
+    p.attack_range = geti("ATTACK_RANGE", p.attack_range);
 
     p.hunt_min_enemy_halite = geti("HUNT_MIN_ENEMY_HALITE", p.hunt_min_enemy_halite);
     p.hunt_max_range = geti("HUNT_MAX_RANGE", p.hunt_max_range);
@@ -251,6 +260,9 @@ inline BotParams load_bot_params(const std::string &file_path) {
     p.low_hp_return = geti("LOW_HP_RETURN", p.low_hp_return);
     p.attack_min_self_hp = geti("ATTACK_MIN_SELF_HP", p.attack_min_self_hp);
     p.hunters_per_target = geti("HUNTERS_PER_TARGET", p.hunters_per_target);
+    p.camp_enabled = getb("CAMP_ENABLED", p.camp_enabled);
+    p.campers_per_structure = geti("CAMPERS_PER_STRUCTURE", p.campers_per_structure);
+    p.camp_assign_turn = geti("CAMP_ASSIGN_TURN", p.camp_assign_turn);
     p.defend_min_cargo = geti("DEFEND_MIN_CARGO", p.defend_min_cargo);
     p.defend_trigger_range = geti("DEFEND_TRIGGER_RANGE", p.defend_trigger_range);
     p.defend_min_cell_halite = geti("DEFEND_MIN_CELL_HALITE", p.defend_min_cell_halite);
@@ -307,10 +319,13 @@ inline BotParams load_bot_params(const std::string &file_path) {
     p.attack_max_self_halite_for_risk = clamp_value(p.attack_max_self_halite_for_risk, 0, 1000);
     p.attack_structure_value = clamp_value(p.attack_structure_value, 0, 800);
     p.attack_ship_value = clamp_value(p.attack_ship_value, 0, 800);
+    p.attack_range = clamp_value(p.attack_range, 1, 5);
     p.hunt_min_enemy_halite = clamp_value(p.hunt_min_enemy_halite, 0, 900);
     p.hunt_max_range = clamp_value(p.hunt_max_range, 2, 20);
-    p.hunt_max_hunters = clamp_value(p.hunt_max_hunters, 0, 6);
+    p.hunt_max_hunters = clamp_value(p.hunt_max_hunters, 0, 30);
     p.hunters_per_target = clamp_value(p.hunters_per_target, 1, 4);
+    p.campers_per_structure = clamp_value(p.campers_per_structure, 1, 10);
+    p.camp_assign_turn = clamp_value(p.camp_assign_turn, 0, 250);
     p.hunt_min_turn = clamp_value(p.hunt_min_turn, 0, 250);
     p.low_hp_return = clamp_value(p.low_hp_return, 0, 100);
     p.attack_min_self_hp = clamp_value(p.attack_min_self_hp, 0, 100);

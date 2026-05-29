@@ -15,12 +15,13 @@
 
 using namespace hlt;
 
-enum class Mode { Collect, Return, Hunt };
+enum class Mode { Collect, Return, Hunt, Camp };
 
 struct State {
     std::unordered_map<EntityId, Mode> mode;
     std::unordered_map<EntityId, Position> target;   // mining target or hunt intercept point
     std::unordered_map<EntityId, EntityId> hunt_id;  // enemy ship ID being hunted
+    std::unordered_map<EntityId, Position> camp_pos; // camp position (Camp mode)
     std::unordered_map<EntityId, int> ttl;            // stuck counter
     std::unordered_map<EntityId, Position> prev;      // previous-turn position (oscillation fix)
 };
@@ -264,7 +265,8 @@ int main(int argc,char* argv[]){
         for(auto it=S.mode.begin();it!=S.mode.end();){
             if(!alive.count(it->first)){
                 S.target.erase(it->first); S.ttl.erase(it->first);
-                S.hunt_id.erase(it->first); it=S.mode.erase(it);
+                S.hunt_id.erase(it->first); S.camp_pos.erase(it->first);
+                it=S.mode.erase(it);
             } else ++it;
         }
         for(const auto& kv:me->ships){
@@ -391,6 +393,67 @@ int main(int argc,char* argv[]){
             }
         }
 
+        // ── Camp assignment ─────────────────────────────────────────────────
+        // When camp is enabled, idle ships are posted near enemy structures
+        // (shipyard + dropoffs) instead of chasing individual ships.  This
+        // eliminates the travel-time bottleneck: targets come to the campers.
+        int camperCount = 0;
+        if(P.camp_enabled && game.turn_number >= P.camp_assign_turn){
+            // Validate existing campers; release those whose structure is gone
+            for(const auto& kv : me->ships){
+                if(!S.mode.count(kv.first) || S.mode[kv.first]!=Mode::Camp) continue;
+                camperCount++;
+            }
+            // Find enemy structures
+            std::vector<Position> enemy_structures;
+            for(const auto& player : game.players){
+                if(player->id==game.my_id) continue;
+                // Shipyard is always known (initial state has it)
+                enemy_structures.push_back(player->shipyard->position);
+                for(const auto& dp : player->dropoffs)
+                    enemy_structures.push_back(dp.second->position);
+            }
+            // Assign new campers from idle Collect ships
+            int maxCampers = (int)enemy_structures.size() * P.campers_per_structure;
+            for(const auto& struct_pos : enemy_structures){
+                int at_this = 0;
+                for(const auto& kv : me->ships){
+                    if(S.mode.count(kv.first) && S.mode[kv.first]==Mode::Camp
+                       && S.camp_pos.count(kv.first)
+                       && S.camp_pos[kv.first] == struct_pos) at_this++;
+                }
+                for(const auto& ship : ships){
+                    if(camperCount >= maxCampers) break;
+                    if(at_this >= P.campers_per_structure) break;
+                    if(S.mode[ship->id]!=Mode::Collect) continue;
+                    // Pick a camp cell: any passable cell within attack_range of the structure
+                    Position best_camp{-1,-1};
+                    int best_d = P.attack_range + 2;
+                    for(int dy=-P.attack_range; dy<=P.attack_range; dy++){
+                        for(int dx=-P.attack_range; dx<=P.attack_range; dx++){
+                            int md = abs(dx)+abs(dy);
+                            if(md < 1 || md > P.attack_range) continue;
+                            Position p{struct_pos.x+dx, struct_pos.y+dy};
+                            if(p.x<0||p.x>=m->width||p.y<0||p.y>=m->height) continue;
+                            if(!m->at(p)->is_empty() && !(p==ship->position)) continue;
+                            int sd = m->calculate_distance(ship->position, p);
+                            if(sd < best_d){ best_d=sd; best_camp=p; }
+                        }
+                    }
+                    if(best_camp.x < 0) continue;
+                    S.mode[ship->id]=Mode::Camp;
+                    S.camp_pos[ship->id]=struct_pos;  // remember which structure
+                    S.target[ship->id]=best_camp;       // navigate to camp cell
+                    if(S.hunt_id.count(ship->id)) S.hunt_id.erase(ship->id);
+                    camperCount++; at_this++;
+                    hlt::log::log("CAMP_ASSIGN T="+std::to_string(game.turn_number)
+                        +" ship="+std::to_string(ship->id)
+                        +" structure=("+std::to_string(struct_pos.x)+","+std::to_string(struct_pos.y)+")"
+                        +" camp=("+std::to_string(best_camp.x)+","+std::to_string(best_camp.y)+")");
+                }
+            }
+        }
+
         // ── Claimed / targeted sets ──────────────────────────────────────────
         std::unordered_set<Position> claimed;
         std::unordered_set<Position> targeted;
@@ -445,7 +508,7 @@ int main(int argc,char* argv[]){
                         auto myship=mk.second;
                         int d=m->calculate_distance(myship->position, enemy->position);
                         if(d<=2) ourNear++;
-                        if(d==1 && myship->hp >= P.attack_min_self_hp) adj.push_back(myship);
+                        if(d <= P.attack_range && myship->hp >= P.attack_min_self_hp) adj.push_back(myship);
                     }
                     // Enemy force in the same area (incl. target) — its potential support.
                     int enemyNear=0;
@@ -475,6 +538,7 @@ int main(int argc,char* argv[]){
             if(ship->hp < P.low_hp_return && S.mode[ship->id]!=Mode::Return){
                 S.mode[ship->id]=Mode::Return;
                 S.hunt_id.erase(ship->id);
+                S.camp_pos.erase(ship->id);
                 clearTarget(ship->id);
             }
 
@@ -557,8 +621,8 @@ int main(int argc,char* argv[]){
                     // fall through to collect logic below
                 } else {
                     int dist=m->calculate_distance(ship->position, enemy_ship->position);
-                    if(dist==1 && ship->hp >= P.attack_min_self_hp){
-                        // Adjacent — attack!
+                    if(dist <= P.attack_range && ship->hp >= P.attack_min_self_hp){
+                        // In range — attack!
                         m->at(ship)->mark_unsafe(ship);
                         q.push_back(ship->attack(enemy_ship));
                         actual=ship->position;
@@ -584,6 +648,65 @@ int main(int argc,char* argv[]){
                     claimed.insert(actual);
                     continue;
                 }
+            }
+
+            // ── Camp mode ───────────────────────────────────────────────────
+            if(S.mode[ship->id]==Mode::Camp){
+                // Attack an enemy ship within range, respecting wolfpack limits.
+                // Count how many campers are already committed to each enemy
+                // this turn so we don't waste 7 attacks on the same ship.
+                std::unordered_map<EntityId,int> camper_on_target;
+                for(const auto& mk : me->ships){
+                    if(S.mode.count(mk.first) && S.mode[mk.first]==Mode::Camp
+                       && S.hunt_id.count(mk.first))
+                        camper_on_target[S.hunt_id[mk.first]]++;
+                }
+                std::shared_ptr<Ship> best_target=nullptr;
+                int best_halite = P.attack_min_target_halite - 1;
+                for(const auto& player : game.players){
+                    if(player->id==game.my_id) continue;
+                    for(const auto& kv : player->ships){
+                        int d = m->calculate_distance(ship->position, kv.second->position);
+                        if(d <= P.attack_range && kv.second->halite > best_halite
+                           && ship->hp >= P.attack_min_self_hp
+                           && camper_on_target[kv.first] < P.hunters_per_target){
+                            best_halite = kv.second->halite;
+                            best_target = kv.second;
+                        }
+                    }
+                }
+                if(best_target){
+                    S.hunt_id[ship->id] = best_target->id; // track which target
+                    m->at(ship)->mark_unsafe(ship);
+                    q.push_back(ship->attack(best_target));
+                    actual = ship->position;
+                    turnAttacks++;
+                    hlt::log::log("CAMP_ATK T="+std::to_string(game.turn_number)
+                        +" ship="+std::to_string(ship->id)
+                        +" enemy="+std::to_string(best_target->id)
+                        +" enemy_halite="+std::to_string(best_target->halite)
+                        +" pack="+std::to_string(camper_on_target[best_target->id]+1));
+                } else if(S.target.count(ship->id)){
+                    // Navigate to camp cell
+                    Position camp = S.target[ship->id];
+                    int cd = m->calculate_distance(ship->position, camp);
+                    if(cd <= 1){
+                        m->at(ship)->mark_unsafe(ship);
+                        q.push_back(ship->stay_still());
+                        actual = ship->position;
+                    } else {
+                        const Position* avP = S.prev.count(ship->id)?&S.prev[ship->id]:nullptr;
+                        if(can_move(m,ship)){ if(!nav(m,ship,camp,q,P,actual,true,avP)) turnNavFail++; }
+                        else{ m->at(ship)->mark_unsafe(ship); q.push_back(ship->stay_still()); actual=ship->position; }
+                    }
+                } else {
+                    m->at(ship)->mark_unsafe(ship);
+                    q.push_back(ship->stay_still());
+                    actual = ship->position;
+                }
+                if(actual==ship->position) turnStay++;
+                claimed.insert(actual);
+                continue;
             }
 
             // ── Return mode ─────────────────────────────────────────────────
@@ -616,7 +739,7 @@ int main(int argc,char* argv[]){
                 for(const auto& player : game.players){
                     if(player->id==game.my_id) continue;
                     for(const auto& kv : player->ships){
-                        if(m->calculate_distance(ship->position, kv.second->position)==1
+                        if(m->calculate_distance(ship->position, kv.second->position) <= P.attack_range
                            && kv.second->halite > best_halite){
                             best_halite=kv.second->halite;
                             best_target=kv.second;
