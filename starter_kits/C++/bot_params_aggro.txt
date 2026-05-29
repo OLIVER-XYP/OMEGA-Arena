@@ -81,10 +81,10 @@ CAMPERS_PER_STRUCTURE=7                      # 7 hunters per enemy structure
 CAMP_ASSIGN_TURN=8                           # start camping at turn 8 — deny eco's
                                              # early economy ASAP (when it compounds most).
 HUNT_MIN_ENEMY_HALITE=40
-HUNT_MAX_RANGE=10                            # long hunter reach — the dominant
-                                             # aggro>eco lever. With CAMP_ASSIGN_TURN=8,
-                                             # aggro>eco = 75.7% at 300 games (Wilson
-                                             # 95% LB 70.5%), robustly >66%.
+HUNT_MAX_RANGE=12                            # long hunter reach — the dominant
+                                             # aggro>eco lever. Balance sweep raised
+                                             # 10→12: lifts the aggro>eco floor to
+                                             # ~84% (LB 78%), tightening the triangle.
 HUNT_MAX_HUNTERS=20                          # max campers (across all structures)
 HUNTERS_PER_TARGET=2
 HUNT_MIN_TURN=30

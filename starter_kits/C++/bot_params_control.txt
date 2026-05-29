@@ -88,7 +88,11 @@ ATTACK_MIN_SELF_HP=45
 
 # Defense: loaded miners issue 'defend' (immune + retaliate via engine
 # DEFEND_RETALIATION_DAMAGE) when a raider is adjacent.
-DEFEND_MIN_CARGO=200
+DEFEND_MIN_CARGO=300                         # balance sweep raised 200→300: fewer
+                                             # ships qualify to defend, pulling the
+                                             # control>aggro ceiling 90→84% down to the
+                                             # eco>control anchor. Past 300 it craters
+                                             # eco>control too (defend gates the econ race).
 DEFEND_MIN_CELL_HALITE=100
 DEFEND_TRIGGER_RANGE=4
 FOCUS_FIRE_MIN_SHIPS=0
