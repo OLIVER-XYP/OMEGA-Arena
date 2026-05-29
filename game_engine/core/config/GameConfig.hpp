@@ -42,6 +42,13 @@ struct EconomyConfig {
     // Quadratic over-threshold spawn-cost component.
     unsigned long spawn_quad_threshold{};
     double        spawn_quad_growth{};
+    // Mining interference: enemy ships within range reduce mining yield.
+    int    mining_interference_range{};
+    double mining_interference_ratio{};
+    double mining_interference_cargo_loss_ratio{};
+    // Plunder: ships near enemy structures gain passive halite income.
+    int    plunder_range{};
+    energy_type plunder_halite_per_turn{};
     // Halite regeneration: cells regrow toward a fraction of their initial energy.
     bool   cell_regen_enabled{};
     double cell_regen_rate{};
@@ -61,6 +68,7 @@ struct CombatConfig {
     bool enable_attacker_self_damage{};
     bool kill_credit_to_attacker{};
     double kill_halite_bonus_ratio{};
+    int attack_range{};
 };
 
 struct InspirationConfig {

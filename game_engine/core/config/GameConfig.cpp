@@ -47,6 +47,11 @@ GameConfig GameConfig::from_constants(const Constants &constants) {
     config.ruleset.economy.ship_count_deviation_penalty = constants.SHIP_COUNT_DEVIATION_PENALTY;
     config.ruleset.economy.spawn_quad_threshold = constants.SPAWN_QUAD_THRESHOLD;
     config.ruleset.economy.spawn_quad_growth   = constants.SPAWN_QUAD_GROWTH;
+    config.ruleset.economy.mining_interference_range = constants.MINING_INTERFERENCE_RANGE;
+    config.ruleset.economy.mining_interference_ratio = constants.MINING_INTERFERENCE_RATIO;
+    config.ruleset.economy.mining_interference_cargo_loss_ratio = constants.MINING_INTERFERENCE_CARGO_LOSS_RATIO;
+    config.ruleset.economy.plunder_range = constants.PLUNDER_RANGE;
+    config.ruleset.economy.plunder_halite_per_turn = constants.PLUNDER_HALITE_PER_TURN;
     config.ruleset.economy.cell_regen_enabled = constants.CELL_REGEN_ENABLED;
     config.ruleset.economy.cell_regen_rate = constants.CELL_REGEN_RATE;
     config.ruleset.economy.cell_regen_cap_fraction = constants.CELL_REGEN_CAP_FRACTION;
@@ -63,6 +68,7 @@ GameConfig GameConfig::from_constants(const Constants &constants) {
     config.ruleset.combat.enable_attacker_self_damage = constants.ENABLE_ATTACKER_SELF_DAMAGE;
     config.ruleset.combat.kill_credit_to_attacker = constants.KILL_CREDIT_TO_ATTACKER;
     config.ruleset.combat.kill_halite_bonus_ratio = constants.KILL_HALITE_BONUS_RATIO;
+    config.ruleset.combat.attack_range = constants.ATTACK_RANGE;
 
     config.ruleset.inspiration.enabled = constants.INSPIRATION_ENABLED;
     config.ruleset.inspiration.extract_ratio = constants.INSPIRED_EXTRACT_RATIO;
@@ -122,6 +128,11 @@ void GameConfig::apply_to_global_constants() const {
     constants.SHIP_COUNT_DEVIATION_PENALTY = ruleset.economy.ship_count_deviation_penalty;
     constants.SPAWN_QUAD_THRESHOLD = ruleset.economy.spawn_quad_threshold;
     constants.SPAWN_QUAD_GROWTH   = ruleset.economy.spawn_quad_growth;
+    constants.MINING_INTERFERENCE_RANGE = ruleset.economy.mining_interference_range;
+    constants.MINING_INTERFERENCE_RATIO = ruleset.economy.mining_interference_ratio;
+    constants.MINING_INTERFERENCE_CARGO_LOSS_RATIO = ruleset.economy.mining_interference_cargo_loss_ratio;
+    constants.PLUNDER_RANGE = ruleset.economy.plunder_range;
+    constants.PLUNDER_HALITE_PER_TURN = ruleset.economy.plunder_halite_per_turn;
     constants.CELL_REGEN_ENABLED = ruleset.economy.cell_regen_enabled;
     constants.CELL_REGEN_RATE = ruleset.economy.cell_regen_rate;
     constants.CELL_REGEN_CAP_FRACTION = ruleset.economy.cell_regen_cap_fraction;
@@ -138,6 +149,7 @@ void GameConfig::apply_to_global_constants() const {
     constants.ENABLE_ATTACKER_SELF_DAMAGE = ruleset.combat.enable_attacker_self_damage;
     constants.KILL_CREDIT_TO_ATTACKER = ruleset.combat.kill_credit_to_attacker;
     constants.KILL_HALITE_BONUS_RATIO = ruleset.combat.kill_halite_bonus_ratio;
+    constants.ATTACK_RANGE = ruleset.combat.attack_range;
 
     constants.INSPIRATION_ENABLED = ruleset.inspiration.enabled;
     constants.INSPIRED_EXTRACT_RATIO = ruleset.inspiration.extract_ratio;

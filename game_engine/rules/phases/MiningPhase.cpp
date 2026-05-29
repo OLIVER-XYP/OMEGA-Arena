@@ -37,6 +37,10 @@ std::vector<MineEffect> build_mine_effects(const GameState &state,
     const auto &inspiration = config.ruleset.inspiration;
     const auto max_energy = economy.max_energy;
     const auto bonus_multiplier = inspiration.bonus_multiplier;
+    const auto interference_range = economy.mining_interference_range;
+    const auto interference_ratio = economy.mining_interference_ratio;
+    const auto cargo_loss_ratio = economy.mining_interference_cargo_loss_ratio;
+    const bool interference_active = interference_range > 0 && (interference_ratio > 0.0 || cargo_loss_ratio > 0.0);
 
     executor.parallel_for(0, entities.size(), [&](std::size_t index) {
         const auto &[entity_id, entity_ref] = entities[index];
@@ -69,6 +73,39 @@ std::vector<MineEffect> build_mine_effects(const GameState &state,
 
         if (entity.is_inspired && bonus_multiplier > 0) {
             gained += static_cast<energy_type>(bonus_multiplier * gained);
+        }
+
+        // Mining interference: an undefended mining ship within range of an
+        // undefended enemy ship gets reduced yield + cargo bleed. Both the
+        // miner AND the interferer must not be defending.
+        //
+        // aggro>eco:  campers (not defending) near eco ships (not defending)
+        //             → mining reduced + cargo bleeds → eco economy crippled
+        // eco>control:  eco ships near control ships → control ships defend
+        //               → immune (interferer is defending)
+        // control>aggro: control miners defend → immune even near campers
+        if (interference_active && !entity.is_defending) {
+            bool interfered = false;
+            for (const auto &[other_id, other_entity] : store.entities_ref()) {
+                if (other_entity.owner == entity.owner) continue;
+                if (other_entity.is_defending) continue;
+                auto other_loc = store.players_ref().at(other_entity.owner).get_entity_location(other_id);
+                if (map.distance(location, other_loc) <= interference_range) {
+                    interfered = true;
+                    break;
+                }
+            }
+            if (interfered) {
+                if (gained > 0 && interference_ratio > 0.0) {
+                    gained = static_cast<energy_type>(gained * (1.0 - interference_ratio));
+                    extracted = static_cast<energy_type>(extracted * (1.0 - interference_ratio));
+                }
+                if (cargo_loss_ratio > 0.0 && entity.energy > 0) {
+                    energy_type loss = static_cast<energy_type>(entity.energy * cargo_loss_ratio);
+                    if (loss == 0) loss = 1;
+                    gained -= loss;
+                }
+            }
         }
 
         if (max_energy - entity.energy < gained) {

@@ -104,6 +104,7 @@ endforeach()
 
 set(HALITE_SOURCE_FILES "${SOURCE_FILES}" main.cpp)
 list(APPEND SOURCE_FILES ${CMAKE_SOURCE_DIR}/rules/phases/OverShipTaxPhase.cpp)
+list(APPEND SOURCE_FILES ${CMAKE_SOURCE_DIR}/rules/phases/PlunderPhase.cpp)
 list(APPEND SOURCE_FILES ${CMAKE_SOURCE_DIR}/rules/phases/RegenPhase.cpp)
 list(APPEND SOURCE_FILES ${CMAKE_SOURCE_DIR}/core/engine/TaskExecutor.cpp)
 

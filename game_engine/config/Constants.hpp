@@ -66,6 +66,7 @@ struct Constants {
     bool ENABLE_ATTACKER_SELF_DAMAGE = true;    /**< Apply ATTACK_HP_SELF_DAMAGE to attacker each hit. */
     bool KILL_CREDIT_TO_ATTACKER    = true;     /**< Remaining cargo of killed ship goes to killer's bank instead of the map. */
     double KILL_HALITE_BONUS_RATIO  = 0.0;      /**< Extra fraction of killed cargo added on top (e.g. 0.5 = 50% bonus). */
+    int    ATTACK_RANGE             = 1;        /**< Max Manhattan distance for a ship-to-ship attack (1 = adjacent only). */
 
     /** Economic diminishing returns (dampens snowball positive feedback).
      *  Tuned 2026-05-11 on 30-seed self-play: stable% 6.7→30, meanRatio 0.30→0.56. */
@@ -108,6 +109,20 @@ struct Constants {
      *  Asymmetric (no penalty below target).  Default disabled. */
     unsigned long SHIP_COUNT_TARGET           = 12;
     energy_type   SHIP_COUNT_DEVIATION_PENALTY = 0;
+
+    /** Mining interference: when an enemy ship is within INTERFERENCE_RANGE cells,
+     *  a mining ship's yield is multiplied by (1 - INTERFERENCE_MINING_RATIO).
+     *  Creates a "fear radius" that lets aggressive fleets suppress enemy economy
+     *  by camping near their structures.  Default disabled (both 0). */
+    int    MINING_INTERFERENCE_RANGE = 0;
+    double MINING_INTERFERENCE_RATIO = 0.0;
+    double MINING_INTERFERENCE_CARGO_LOSS_RATIO = 0.0; /**< Fraction of cargo lost per turn when interfered. */
+
+    /** Plunder: ships within PLUNDER_RANGE of an enemy structure gain
+     *  PLUNDER_HALITE_PER_TURN halite each turn. Rewards aggressive positioning
+     *  (camping near enemy structures) with passive income. Default disabled. */
+    int    PLUNDER_RANGE           = 0;
+    energy_type PLUNDER_HALITE_PER_TURN = 0;
 
     /** Halite regeneration ("territory control").  Every turn each non-structure
      *  cell with initial energy > 0 regrows by ceil(CELL_REGEN_RATE × initial_energy),

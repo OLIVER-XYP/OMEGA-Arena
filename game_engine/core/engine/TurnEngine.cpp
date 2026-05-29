@@ -15,6 +15,7 @@
 #include "phases/MiningPhase.hpp"
 #include "phases/MovementPhase.hpp"
 #include "phases/OverShipTaxPhase.hpp"
+#include "phases/PlunderPhase.hpp"
 #include "phases/RegenPhase.hpp"
 #include "phases/SpawnPhase.hpp"
 #include "phases/ValidationPhase.hpp"
@@ -32,6 +33,7 @@ TurnEngine::TurnEngine(const GameConfig &config) : config(config) {
     ruleset.add_phase(std::make_unique<rules::phases::DumpPhase>());
     ruleset.add_phase(std::make_unique<rules::phases::SpawnPhase>());
     ruleset.add_phase(std::make_unique<rules::phases::MiningPhase>());
+    ruleset.add_phase(std::make_unique<rules::phases::PlunderPhase>());
     ruleset.add_phase(std::make_unique<rules::phases::RegenPhase>());
     ruleset.add_phase(std::make_unique<rules::phases::CapturePhase>());
     ruleset.add_phase(std::make_unique<rules::phases::OverShipTaxPhase>());

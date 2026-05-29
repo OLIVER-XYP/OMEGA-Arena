@@ -16,7 +16,8 @@ struct PendingDeath {
     Player::id_type owner{Player::None};
     Player::id_type killer{Player::None};
     Location loc{0, 0};
-    energy_type energy{};
+    energy_type energy{};           // energy dumped on cell (post-steal)
+    energy_type pre_steal_energy{}; // energy used for kill credit (pre-steal)
 };
 
 struct StructureAttackPlan {
@@ -116,7 +117,7 @@ void CombatPhase::execute(RuleContext &context) const {
 
             const auto &target_player = store.get_player(target_ptr->owner);
             const auto target_loc = target_player.get_entity_location(command->target);
-            if (map.distance(attacker_loc, target_loc) != 1) {
+            if (map.distance(attacker_loc, target_loc) > combat.attack_range) {
                 plan.invalid = true;
                 plans[index] = plan;
                 return;
@@ -194,32 +195,31 @@ void CombatPhase::execute(RuleContext &context) const {
         auto &current_target = store.get_entity(ship.target_id);
         auto &target_player = store.get_player(current_target.owner);
         const auto current_target_loc = target_player.get_entity_location(ship.target_id);
-        if (current_target.owner == plan.player_id || !(current_target_loc == ship.target_loc) || map.distance(ship.attacker_loc, current_target_loc) != 1) {
+        if (current_target.owner == plan.player_id || !(current_target_loc == ship.target_loc) || map.distance(ship.attacker_loc, current_target_loc) > combat.attack_range) {
             append_error(result, std::make_unique<EntityNotFoundError<AttackCommand>>(plan.player_id, *plan.command, !context.config().match.strict_errors));
             return;
         }
         if (current_target.is_defending) {
-            // Defender is immune to damage/theft, and reflects retaliation damage
-            // back to the attacker. This gives defense a structural counter to
-            // aggression: raiding a defended ship can get the raider killed.
+            // Defender reflects retaliation damage back to the attacker, but the
+            // attack still lands (damage + theft).  This makes defend a soft
+            // counter: attacking a turtled ship is costly but not impossible.
+            // The structural rock-paper-scissors cycle depends on this — without
+            // it aggro can never beat control and the metagame collapses to a
+            // single transitive ordering.
             if (combat.defend_retaliation_damage > 0) {
                 attacker.hp -= combat.defend_retaliation_damage;
                 result.changed_entities.emplace(ship.attacker_id);
                 if (player.has_entity(ship.attacker_id)) {
                     auto &att = store.get_entity(ship.attacker_id);
                     if (att.hp <= 0) {
-                        to_delete.push_back({ship.attacker_id, plan.player_id, current_target.owner, ship.attacker_loc, att.energy});
+                        to_delete.push_back({ship.attacker_id, plan.player_id, current_target.owner, ship.attacker_loc, att.energy, att.energy});
                     }
                 }
             }
-            context.event_sink().emit(events::CombatResolvedEvent{ship.attacker_loc,
-                                                                  ship.attacker_id,
-                                                                  current_target_loc,
-                                                                  ship.target_id,
-                                                                  false});
-            return;
+            // Fall through — attack still deals damage and steals cargo.
         }
 
+        auto target_energy_pre_steal = current_target.energy;
         current_target.hp -= combat.attack_hp_damage;
         energy_type stolen = static_cast<energy_type>(static_cast<double>(current_target.energy) * combat.attack_halite_steal_ratio);
         current_target.energy -= stolen;
@@ -239,25 +239,28 @@ void CombatPhase::execute(RuleContext &context) const {
         result.changed_entities.emplace(ship.target_id);
 
         if (current_target.hp <= 0) {
-            to_delete.push_back({ship.target_id, current_target.owner, plan.player_id, current_target_loc, current_target.energy});
+            to_delete.push_back({ship.target_id, current_target.owner, plan.player_id,
+                                 current_target_loc, current_target.energy, target_energy_pre_steal});
         }
         if (player.has_entity(ship.attacker_id)) {
             auto &att = store.get_entity(ship.attacker_id);
             if (att.hp <= 0) {
-                to_delete.push_back({ship.attacker_id, plan.player_id, Player::None, ship.attacker_loc, att.energy});
+                to_delete.push_back({ship.attacker_id, plan.player_id, Player::None,
+                                     ship.attacker_loc, att.energy, att.energy});
             }
         }
     });
 
     std::unordered_set<Entity::id_type> deleted;
-    for (auto &[eid, owner_id, killer_id, loc, energy] : to_delete) {
+    for (auto &[eid, owner_id, killer_id, loc, energy, pre_steal_energy] : to_delete) {
         if (deleted.count(eid)) {
             continue;
         }
         deleted.insert(eid);
         auto &cell = map.at(loc);
         if (combat.kill_credit_to_attacker && killer_id != Player::None && killer_id != owner_id) {
-            energy_type credited = static_cast<energy_type>(energy * (1.0 + combat.kill_halite_bonus_ratio));
+            energy_type base = pre_steal_energy > 0 ? pre_steal_energy : energy;
+            energy_type credited = static_cast<energy_type>(base * (1.0 + combat.kill_halite_bonus_ratio));
             auto &killer_player = store.get_player(killer_id);
             killer_player.energy += credited;
             killer_player.total_energy_deposited += credited;
