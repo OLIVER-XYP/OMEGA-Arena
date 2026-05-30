@@ -129,6 +129,20 @@ static double score_cell(const std::unique_ptr<GameMap>& m,const Position& p,con
     return sc;
 }
 
+// Free a ship's origin cell the instant it commits to a move. The engine
+// resolves all moves simultaneously, so once ship s has queued a move OFF its
+// cell, that cell is genuinely empty this turn and a trailing ship may step into
+// it. Without this, a vacated cell keeps reading is_occupied() for the rest of
+// the turn's processing — which deadlocks the end-game dropoff (a loaded ship
+// one step away can never enter the shipyard the turn its occupant leaves, so
+// cargo never banks). Guard: only clear if the cell still holds THIS ship (i.e.
+// nobody else has claimed it as a destination yet — impossible anyway, since a
+// ship can't move into an as-yet-unvacated cell, but defensive).
+static inline void free_origin(const std::unique_ptr<GameMap>& m, const std::shared_ptr<Ship>& s){
+    auto* c = m->at(s->position);
+    if(c->ship && c->ship.get() == s.get()) c->ship = nullptr;
+}
+
 // nav — moves ship toward dst, or stays still.
 // avoid: secondary nav won't go to this cell (= previous cell, prevents 2-step oscillation).
 static bool nav(const std::unique_ptr<GameMap>& m, std::shared_ptr<Ship> s, const Position& dst,
@@ -156,7 +170,7 @@ static bool nav(const std::unique_ptr<GameMap>& m, std::shared_ptr<Ship> s, cons
         }
         if(haveMove){
             Position t = s->position.directional_offset(bestDir);
-            m->at(t)->mark_unsafe(s); q.push_back(s->move(bestDir)); actual=t; return true;
+            free_origin(m,s); m->at(t)->mark_unsafe(s); q.push_back(s->move(bestDir)); actual=t; return true;
         }
         m->at(s)->mark_unsafe(s); q.push_back(s->stay_still()); actual=s->position; return false;
     }
@@ -165,7 +179,7 @@ static bool nav(const std::unique_ptr<GameMap>& m, std::shared_ptr<Ship> s, cons
     for(auto d : primary){
         Position t = s->position.directional_offset(d);
         if(!m->at(t)->is_occupied()){
-            m->at(t)->mark_unsafe(s); q.push_back(s->move(d)); actual = t; return true;
+            free_origin(m,s); m->at(t)->mark_unsafe(s); q.push_back(s->move(d)); actual = t; return true;
         }
     }
     if(P.enable_secondary_nav && secondary_ok){
@@ -177,7 +191,7 @@ static bool nav(const std::unique_ptr<GameMap>& m, std::shared_ptr<Ship> s, cons
             Position t = s->position.directional_offset(d);
             if(avoid && t == *avoid) continue;
             if(!m->at(t)->is_occupied()){
-                m->at(t)->mark_unsafe(s); q.push_back(s->move(d)); actual = t; return true;
+                free_origin(m,s); m->at(t)->mark_unsafe(s); q.push_back(s->move(d)); actual = t; return true;
             }
         }
         // Phase 3: last resort — any non-primary, avoid prev cell
@@ -188,7 +202,7 @@ static bool nav(const std::unique_ptr<GameMap>& m, std::shared_ptr<Ship> s, cons
             Position t = s->position.directional_offset(d);
             if(avoid && t == *avoid) continue;
             if(!m->at(t)->is_occupied()){
-                m->at(t)->mark_unsafe(s); q.push_back(s->move(d)); actual = t; return true;
+                free_origin(m,s); m->at(t)->mark_unsafe(s); q.push_back(s->move(d)); actual = t; return true;
             }
         }
     }
@@ -208,7 +222,7 @@ static bool evacuate_structure_cell(const std::shared_ptr<Player>& me,const std:
     }
     if(hasMove){
         Position t=s->position.directional_offset(bestD);
-        m->at(t)->mark_unsafe(s); q.push_back(s->move(bestD)); actual=t; return true;
+        free_origin(m,s); m->at(t)->mark_unsafe(s); q.push_back(s->move(bestD)); actual=t; return true;
     }
     return false;
 }
