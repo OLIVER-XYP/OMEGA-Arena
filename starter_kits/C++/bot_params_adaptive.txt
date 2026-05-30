@@ -1,0 +1,29 @@
+# Strategy: ADAPTIVE meta-bot — scouts the opponent's archetype, then commits
+# to the iron-triangle counter (aggro>eco>control>aggro).
+#   opponent AGGRO   -> we play CONTROL  (control beats aggro, ~82%)
+#   opponent ECO     -> we play AGGRO    (aggro beats eco,     ~83%)
+#   opponent CONTROL -> we play ECO      (eco beats control,   ~77%)
+# While scouting we run CONTROL as a defensive hedge: early camping/raiding is
+# the only thing that punishes a slow opening, and control hard-counters it.
+ADAPTIVE=1
+
+# Profile files (resolved relative to THIS file's directory).
+PROFILE_AGGRO=bot_params_aggro.txt
+PROFILE_ECO=bot_params_eco.txt
+PROFILE_CONTROL=bot_params_control.txt
+
+# Classification deadline: latest turn by which we lock in a counter. Held to
+# ~45 because AGGRO's cross-map raiders only reveal themselves by ~turn 40.
+SCOUT_UNTIL=45
+# Earliest turn we may early-commit to "opponent is AGGRO" once a signature
+# fires (avoids acting on turn-1 noise).
+AGGRO_COMMIT_TURN=25
+# AGGRO signature #1: mean enemy ships camped within 6 of OUR structures.
+# eco/control never approach us, so any sustained camping is aggro.
+CAMP_THRESH=0.35
+# AGGRO signature #2: enemy mean distance from THEIR OWN shipyard. Aggro sends
+# raiders across the map toward us (davg 6-9); eco/control mine their own half
+# early and stay <5. NOTE: this does NOT separate eco from control — they are
+# behaviorally identical early, so the no-aggro branch defaults to ECO (the
+# Bayes-optimal hedge: beats control, mirrors eco, never the aggro-vs-control loss).
+AGGRO_DAVG_THRESH=6.0

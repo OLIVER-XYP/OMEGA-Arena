@@ -12,8 +12,10 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <filesystem>
 
 using namespace hlt;
+namespace fs = std::filesystem;
 
 enum class Mode { Collect, Return, Hunt, Camp };
 
@@ -224,17 +226,128 @@ static int spawn_cost_now(int currentShips){
     return (int)(constants::SHIP_COST * factor);
 }
 
+// ── Adaptive meta-strategy ───────────────────────────────────────────────
+// A scheduler that exploits the iron triangle (aggro>eco>control>aggro): it
+// scouts the opponent's archetype for a few dozen turns, then commits to the
+// COUNTER profile. Each archetype is just a BotParams set, and the turn loop
+// reads P fresh every turn, so "switching strategy" is a single assignment.
+// Activated by an adaptive config file (ADAPTIVE=1) that points at the three
+// profile files; otherwise the bot loads a single fixed profile as before.
+struct AdaptiveCfg {
+    bool enabled = false;
+    BotParams aggro, eco, control;
+    int scout_until = 45;        // hard classification deadline (turn)
+    int aggro_commit_turn = 25;  // earliest turn to lock in "opp=aggro"
+    // AGGRO is the only archetype distinguishable early: it pushes ships toward
+    // us. Two signatures, either one fires: campers parked near our structures,
+    // or a large mean enemy distance-from-their-home (raiders crossing the map).
+    double camp_thresh = 0.35;       // avg campers within 6 of our structures
+    double aggro_davg_thresh = 6.0;  // enemy mean dist from THEIR home
+    // ECO and CONTROL are behaviorally identical early (both mine peacefully),
+    // so when no aggro signature appears we play ECO: it's the Bayes-optimal
+    // hedge over the eco/control ambiguity (beats control ~77%, mirrors eco ~50%;
+    // playing aggro here would LOSE catastrophically if the opponent is control).
+};
+
+static AdaptiveCfg load_adaptive_cfg(const std::string& path){
+    AdaptiveCfg AC;
+    std::ifstream in(path);
+    if(!in.good()) return AC;
+    std::unordered_map<std::string,std::string> kv;
+    std::string line;
+    while(std::getline(in,line)){
+        line=trim_copy(line);
+        if(line.empty()||line[0]=='#') continue;
+        auto eq=line.find('='); if(eq==std::string::npos) continue;
+        kv[trim_copy(line.substr(0,eq))]=trim_copy(line.substr(eq+1));
+    }
+    auto it=kv.find("ADAPTIVE");
+    if(it==kv.end() || !parse_bool(it->second)) return AC;  // plain fixed profile
+    AC.enabled=true;
+    fs::path base = fs::path(path).parent_path();
+    auto resolve=[&](const std::string& p)->std::string{
+        fs::path pp(p);
+        return pp.is_absolute() ? pp.string() : (base/pp).string();
+    };
+    if(kv.count("PROFILE_AGGRO"))   AC.aggro   = load_bot_params(resolve(kv["PROFILE_AGGRO"]));
+    if(kv.count("PROFILE_ECO"))     AC.eco     = load_bot_params(resolve(kv["PROFILE_ECO"]));
+    if(kv.count("PROFILE_CONTROL")) AC.control = load_bot_params(resolve(kv["PROFILE_CONTROL"]));
+    auto geti=[&](const char* k,int cur){ return kv.count(k)?std::stoi(kv[k]):cur; };
+    auto getd=[&](const char* k,double cur){ return kv.count(k)?std::stod(kv[k]):cur; };
+    AC.scout_until        = geti("SCOUT_UNTIL", AC.scout_until);
+    AC.aggro_commit_turn  = geti("AGGRO_COMMIT_TURN", AC.aggro_commit_turn);
+    AC.camp_thresh        = getd("CAMP_THRESH", AC.camp_thresh);
+    AC.aggro_davg_thresh  = getd("AGGRO_DAVG_THRESH", AC.aggro_davg_thresh);
+    return AC;
+}
+
 int main(int argc,char* argv[]){
     unsigned int seed=(argc>1)?(unsigned int)std::stoul(argv[1]):(unsigned int)time(nullptr);
     std::mt19937 rng(seed); (void)rng;
-    BotParams P=(argc>2)?load_bot_params(argv[2]):load_bot_params("bot_params.txt");
+    std::string cfgPath=(argc>2)?std::string(argv[2]):std::string("bot_params.txt");
+    AdaptiveCfg AC=load_adaptive_cfg(cfgPath);
+    // Adaptive: open in ECO. Trace data shows aggro's raiders don't reach us
+    // until ~turn 40, so an economy opening is safe through the scouting window
+    // AND avoids handicapping the eco mirror; we flip to control the instant the
+    // aggro signature fires. Fixed mode: load the single profile as before.
+    BotParams P = AC.enabled ? AC.eco : load_bot_params(cfgPath);
+    bool adapt_committed = false;
+    double adapt_inv_sum = 0.0; int adapt_samples = 0;
     State S;
 
-    Game game; game.ready("MyCppBotV4Combat");
+    Game game; game.ready(AC.enabled ? "MyCppBotAdaptive" : "MyCppBotV4Combat");
 
     for(;;){
         game.update_frame();
         auto me=game.me; auto& m=game.game_map; std::vector<Command> q;
+
+        // ── Adaptive archetype detection ─────────────────────────────────────
+        // Runs BEFORE any per-turn value reads P, so a commit takes effect the
+        // same turn. Features: (1) invasion = enemy ships in OUR half (aggro
+        // signature — it camps/raids our side); (2) ranging = enemy mean
+        // distance from THEIR shipyard (eco fans out to mine the whole half;
+        // control hugs home to cluster & defend). Counter map: opp aggro->we
+        // play control, opp eco->aggro, opp control->eco.
+        if(AC.enabled && !adapt_committed){
+            // camp = enemy ships within CAMP_RADIUS of any of OUR structures
+            // (the aggro signature — it parks raiders on our shipyard/dropoffs).
+            // davg = enemy mean distance from THEIR OWN shipyard (eco fans out to
+            // mine the whole half -> large; control clusters near home -> small).
+            const int CAMP_RADIUS = 6;
+            std::vector<Position> my_struct{me->shipyard->position};
+            for(const auto& dp : me->dropoffs) my_struct.push_back(dp.second->position);
+            int camp_now=0; double home_dist_sum=0.0; int eships=0;
+            for(const auto& pl : game.players){
+                if(pl->id==game.my_id) continue;
+                Position ehome = pl->shipyard->position;
+                for(const auto& kv : pl->ships){
+                    Position ep = kv.second->position;
+                    int dmin=1e9; for(const auto& sp : my_struct) dmin=std::min(dmin, m->calculate_distance(ep,sp));
+                    if(dmin <= CAMP_RADIUS) camp_now++;
+                    home_dist_sum += m->calculate_distance(ep, ehome); eships++;
+                }
+            }
+            adapt_inv_sum += camp_now; adapt_samples++;
+            double camp_avg = adapt_inv_sum / std::max(1, adapt_samples);
+            double davg = eships ? home_dist_sum/eships : 0.0;
+            bool aggro_sig = (camp_avg >= AC.camp_thresh) || (davg >= AC.aggro_davg_thresh);
+
+            bool decide=false; const char* tag=nullptr;
+            if(game.turn_number >= AC.aggro_commit_turn && aggro_sig){
+                P = AC.control; tag="control (opp=AGGRO, early)"; decide=true;
+            } else if(game.turn_number >= AC.scout_until){
+                if(aggro_sig){ P=AC.control; tag="control (opp=AGGRO)"; }
+                else         { P=AC.eco;     tag="eco (opp=ECO/CONTROL hedge)"; }
+                decide=true;
+            }
+            if(decide){
+                adapt_committed=true;
+                hlt::log::log(std::string("ADAPT_COMMIT T=")+std::to_string(game.turn_number)
+                    +" camp_avg="+std::to_string(camp_avg)
+                    +" davg="+std::to_string(davg)+" choice="+tag);
+            }
+        }
+
         int left=constants::MAX_TURNS-game.turn_number;
         int stop=(int)(constants::MAX_HALITE*P.stop_ratio);
         int radius=std::max(1,radius_now(P,game.turn_number));

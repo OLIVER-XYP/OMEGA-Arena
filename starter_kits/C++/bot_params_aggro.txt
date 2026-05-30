@@ -82,11 +82,13 @@ CAMP_ASSIGN_TURN=8                           # start camping at turn 8 — deny 
                                              # early economy ASAP (when it compounds most).
 HUNT_MIN_ENEMY_HALITE=40
 HUNT_MAX_RANGE=14                            # long hunter reach — the dominant
-                                             # aggro>eco lever. Refinement raised
-                                             # 12→14: lifts BOTH aggro>eco (~80→84%)
-                                             # and control>aggro (~82→84%) together,
-                                             # so spread stays ~2% but the whole
-                                             # triangle rises (min edge 80→82%).
+                                             # aggro>eco lever. 5000-game validation:
+                                             # the two aggro edges are ANTI-correlated
+                                             # in R — raising R lifts aggro>eco (~+2.6pt
+                                             # /unit) but LOWERS control>aggro (~-1pt/unit).
+                                             # They cross near R=14 (both ~82%), which
+                                             # minimizes spread against the fixed
+                                             # eco>control anchor (76.7%). R=14 = optimum.
 HUNT_MAX_HUNTERS=20                          # max campers (across all structures)
 HUNTERS_PER_TARGET=2
 HUNT_MIN_TURN=30
