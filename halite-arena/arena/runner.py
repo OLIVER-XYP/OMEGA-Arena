@@ -22,7 +22,12 @@ def _run_cases(cases, *, game_dir_root: Path, engine_kwargs: dict) -> list[tuple
         futs = {}
         for ci, case in enumerate(cases):
             gd = _case_game_dir(game_dir_root, ci)
-            futs[ex.submit(run_one_game, case.spec_a, case.spec_b, case.seed,
+            # Apply the case's seat assignment: side_a==1 means spec_b plays
+            # side 0 (same seed, sides swapped) so map/first-move bias cancels.
+            # GameRecord.margin is side-0 relative, so callers must read side_a.
+            spec0, spec1 = ((case.spec_a, case.spec_b) if case.side_a == 0
+                            else (case.spec_b, case.spec_a))
+            futs[ex.submit(run_one_game, spec0, spec1, case.seed,
                            game_dir=gd, **engine_kwargs)] = ci
         for fut in as_completed(futs):
             ci = futs[fut]
@@ -78,14 +83,13 @@ def run_practice(agent_name: str, targets: list[BotSpec], *, seeds: int = 2,
         if not rec.ok:
             continue
         ag["ok"] += 1
-        # agent 的 margin：agent 在 side_a? 用 spec_a 视角
+        # margin 是 side-0 视角；先换算回 spec_a 视角，再取 agent 视角。
+        # （side_a==1 时 spec_b 坐 side 0，故 spec_a 视角需取反）
+        a_margin = rec.margin if case.side_a == 0 else -rec.margin
         agent_is_a = case.spec_a.short == agent_name
-        if agent_is_a:
-            ag["margins"].append(rec.margin)
-            ag["wins"] += 1 if rec.margin > 0 else 0
-        else:
-            ag["margins"].append(-rec.margin)
-            ag["wins"] += 1 if rec.margin < 0 else 0
+        agent_margin = a_margin if agent_is_a else -a_margin
+        ag["margins"].append(agent_margin)
+        ag["wins"] += 1 if agent_margin > 0 else 0
     summary = {}
     for opp, d in sorted(by_opp.items()):
         ok = max(1, d["ok"])

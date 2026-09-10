@@ -1,6 +1,7 @@
 """Pairing / case generation for practice & round-robin matches."""
 from __future__ import annotations
 
+import zlib
 from dataclasses import dataclass
 from typing import Sequence
 
@@ -16,8 +17,13 @@ class Case:
 
 
 def seed_for(name: str) -> int:
-    """Deterministic per-opponent seed offset (mirror evaluate.seed_offset)."""
-    return abs(hash(name)) % 997
+    """Deterministic per-opponent seed offset (mirror evaluate.seed_offset).
+
+    Uses CRC32, NOT the builtin hash(): string hashing is salted per process
+    (PYTHONHASHSEED), so ``hash(name)`` differs across runs and would make
+    ``practice`` seeds irreproducible. CRC32 is stable across processes/hosts.
+    """
+    return zlib.crc32(name.encode("utf-8")) % 997
 
 
 def round_cases(agents: Sequence[BotSpec], pool: Sequence[BotSpec],
