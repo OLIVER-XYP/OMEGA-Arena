@@ -28,6 +28,7 @@ sys.path.insert(0, str(ARENA))
 
 from arena import _elo, _rl_compat, pairing  # noqa: E402
 from arena import bots as bots_mod  # noqa: E402
+from arena import compile as compile_mod  # noqa: E402
 from arena import elo as elo_mod  # noqa: E402
 from arena import paths as paths_mod  # noqa: E402
 from arena import pool as pool_mod  # noqa: E402
@@ -209,11 +210,25 @@ class TestPairingDeterminism(unittest.TestCase):
         self.assertEqual(len(specs), 3 * 2 * 2 + 3 * 1 * 2 * 2)
         self.assertTrue(all(c.side_a in (0, 1) for c in specs))
 
-    def test_roundrobin_rejects_even_games(self):
+    def test_roundrobin_rejects_invalid_games(self):
         bots = [bots_mod.BotSpec(name=f"b{i}", kind="agent", tag=f"b{i}") for i in range(3)]
-        # even count would give an unfair pairing; must fall back to an odd >= 3
-        cases = pairing.roundrobin_cases(bots, games_per_pair=4)
-        self.assertTrue(len(cases) > 0)
+        # even / <3 pairs would be unfair; reject loudly instead of silently
+        # coercing (a caller recording its requested value would then disagree
+        # with the games actually played).
+        for bad in (0, 2, 4, 10):
+            with self.assertRaises(ValueError):
+                pairing.roundrobin_cases(bots, games_per_pair=bad)
+        self.assertTrue(len(pairing.roundrobin_cases(bots, games_per_pair=3)) > 0)
+
+    def test_round_cases_namespaces_do_not_overlap(self):
+        agents = [bots_mod.BotSpec(name=f"agent:a{i}", kind="agent", tag=f"a{i}") for i in range(12)]
+        pool = [bots_mod.script_spec("eco")]
+        cases = pairing.round_cases(agents, pool, games_av=2, games_pool=2)
+        n_av = len(agents) * (len(agents) - 1) // 2 * 2 * 2   # pairs * games * sides
+        av = {c.seed for c in cases[:n_av]}
+        pool_seeds = {c.seed for c in cases[n_av:]}
+        self.assertTrue(av and pool_seeds)
+        self.assertFalse(av & pool_seeds, "agent-vs-agent and agent-vs-pool seeds collide")
 
 
 class TestPoolIdRule(unittest.TestCase):
@@ -254,6 +269,175 @@ class TestBotCommands(unittest.TestCase):
     def test_agent_short_name(self):
         spec = bots_mod.BotSpec(name="agent:testbot", kind="agent", tag="testbot")
         self.assertEqual(spec.short, "testbot")
+
+
+class TestLadderInvariants(unittest.TestCase):
+    def _ladder(self):
+        lad = _elo.Ladder(games_per_pair=11)
+        bots = [f"b{i}" for i in range(4)]
+        for i in range(4):          # b0 > b1 > b2 > b3, deterministic results
+            for j in range(i + 1, 4):
+                lad.add_pair_result(bots[i], bots[j], 8, 3)
+        return lad
+
+    def test_compute_is_zero_sum(self):
+        r = self._ladder().compute()
+        self.assertAlmostEqual(sum(r.values()), 4 * 1500.0, places=3)
+
+    def test_compute_is_idempotent(self):
+        lad = self._ladder()
+        self.assertEqual(lad.compute(), lad.compute())
+
+    def test_compute_orders_by_results(self):
+        r = self._ladder().compute()
+        self.assertGreater(r["b0"], r["b1"])
+        self.assertGreater(r["b1"], r["b2"])
+        self.assertGreater(r["b2"], r["b3"])
+
+    def test_same_insertion_order_is_reproducible(self):
+        # compute() is Gauss-Seidel (in-place updates), so identical insertion
+        # order must yield identical ratings; callers must insert pairs stably.
+        self.assertEqual(self._ladder().compute(), self._ladder().compute())
+
+
+class TestEloEdgeCases(unittest.TestCase):
+    def test_extreme_rating_gap_overflows(self):
+        # 10 ** ((b-a)/400) is unguarded: a huge gap raises rather than clamping.
+        with self.assertRaises(OverflowError):
+            _elo.expected(0.0, 1_000_000.0)
+
+    def test_first_positional_arg_is_initial_rating(self):
+        # documents the footgun: Ladder(11) binds initial=11, not games_per_pair.
+        lad = _elo.Ladder(11)
+        self.assertEqual(lad.initial, 11)
+        self.assertEqual(lad.games_per_pair, 51)
+        self.assertEqual(_elo.Ladder(games_per_pair=11).initial, 1500.0)
+
+
+class TestEloStateDirAndIdempotence(unittest.TestCase):
+    def setUp(self):
+        self._orig = paths_mod.state_dir
+
+    def tearDown(self):
+        paths_mod.state_dir = self._orig  # type: ignore[assignment]
+
+    def test_first_call_on_fresh_state_dir_does_not_crash(self):
+        with tempfile.TemporaryDirectory() as d:
+            target = Path(d) / "nested" / "state"     # parent does not exist yet
+            paths_mod.state_dir = lambda: target       # type: ignore[assignment]
+            elo_mod.apply_pair_results([("a", "b", 1, 0)], games_per_pair=3)
+            self.assertTrue((target / "matches.jsonl").exists())
+
+    def test_run_key_makes_reruns_idempotent(self):
+        with tempfile.TemporaryDirectory() as d:
+            paths_mod.state_dir = lambda: Path(d)      # type: ignore[assignment]
+            for _ in range(3):
+                elo_mod.apply_pair_results([("a", "b", 1, 0)], games_per_pair=3, run_key="run-1")
+            self.assertEqual(len(elo_mod.load_matches()), 1)
+
+    def test_distinct_run_keys_accumulate(self):
+        with tempfile.TemporaryDirectory() as d:
+            paths_mod.state_dir = lambda: Path(d)      # type: ignore[assignment]
+            elo_mod.apply_pair_results([("a", "b", 1, 0)], games_per_pair=3, run_key="r1")
+            elo_mod.apply_pair_results([("a", "b", 0, 1)], games_per_pair=3, run_key="r2")
+            self.assertEqual(len(elo_mod.load_matches()), 2)
+
+    def test_untracked_anchor_is_injected(self):
+        with tempfile.TemporaryDirectory() as d:
+            paths_mod.state_dir = lambda: Path(d)      # type: ignore[assignment]
+            r = elo_mod.apply_pair_results([("a", "b", 1, 0)], games_per_pair=3,
+                                           anchors={"eco": 1450.0})
+            self.assertEqual(r["eco"], 1450.0)
+
+
+class TestRunIdAllocation(unittest.TestCase):
+    def test_unique_and_created_within_same_second(self):
+        with tempfile.TemporaryDirectory() as d:
+            orig = paths_mod.runs_root
+            paths_mod.runs_root = lambda: Path(d)      # type: ignore[assignment]
+            try:
+                a = paths_mod.new_run_id("t")
+                b = paths_mod.new_run_id("t")
+            finally:
+                paths_mod.runs_root = orig             # type: ignore[assignment]
+            self.assertNotEqual(a, b)
+            self.assertTrue(a.exists() and b.exists())
+
+
+class TestCompileHelpers(unittest.TestCase):
+    def test_iter_sources_includes_cc_and_is_sorted(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d)
+            (p / "b.cpp").write_text("int main(){}")
+            (p / "a.cc").write_text("int main(){}")
+            self.assertEqual([s.name for s in compile_mod._iter_sources(p)], ["a.cc", "b.cpp"])
+
+    def test_find_main_finds_cc(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "m.cc").write_text("int main(){return 0;}")
+            self.assertIsNotNone(compile_mod._find_main_cpp(Path(d)))
+
+    def test_find_main_none(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "x.cpp").write_text("void f(){}")
+            self.assertIsNone(compile_mod._find_main_cpp(Path(d)))
+
+
+class TestPoolResolution(unittest.TestCase):
+    def test_registry_relative_path_resolves_against_omega_root(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            store = root / "bots" / "registry_store"
+            store.mkdir(parents=True)
+            ckpt = store / "botx.pt"
+            ckpt.write_bytes(b"x")
+            reg = root / "bot_registry.json"
+            reg.write_text(json.dumps({"bots": [{"id": "botx", "path": "bots/registry_store/botx.pt"}]}))
+            c = pool_mod.C
+            saved = (c.OMEGA_ROOT, c.BOT_REGISTRY, c.BOT_INDEX, c.BOT_POOL)
+            c.OMEGA_ROOT, c.BOT_REGISTRY = root, reg
+            c.BOT_INDEX = root / "absent_index.json"      # force registry fallback
+            c.BOT_POOL = root / "bots" / "empty_pool"     # direct rule must miss
+            try:
+                self.assertEqual(pool_mod.resolve_checkpoint("botx"), ckpt)
+            finally:
+                c.OMEGA_ROOT, c.BOT_REGISTRY, c.BOT_INDEX, c.BOT_POOL = saved
+
+    def test_top_pool_ids_skips_ids_absent_from_index(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            idx = root / "bot_index.json"
+            idx.write_text(json.dumps({"entries": {"good": {"present": True, "file": "bots/pool/good.pt"}}}))
+            roster = root / "rank.json"
+            roster.write_text(json.dumps({"ranking": [{"id": "good"}, {"id": "ghost"}]}))
+            c = pool_mod.C
+            saved = (c.BOT_INDEX, c.POOL_ROSTER)
+            c.BOT_INDEX, c.POOL_ROSTER = idx, roster
+            try:
+                self.assertEqual(pool_mod.top_pool_ids(5), ["good"])
+            finally:
+                c.BOT_INDEX, c.POOL_ROSTER = saved
+
+
+class TestDeviceOverride(unittest.TestCase):
+    def test_device_flag_overrides_rl_spec(self):
+        from arena.engine_runner import _with_device
+        s = bots_mod.rl_spec("x", checkpoint=Path("/tmp/x.pt"), device="auto")
+        self.assertEqual(_with_device(s, "cuda:0").device, "cuda:0")
+        self.assertEqual(_with_device(s, "auto").device, "auto")   # no-op
+
+    def test_script_and_agent_specs_unaffected(self):
+        from arena.engine_runner import _with_device
+        sc = bots_mod.script_spec("eco")
+        self.assertIs(_with_device(sc, "cuda:0"), sc)
+
+
+class TestRunnerKwargs(unittest.TestCase):
+    def test_run_cases_does_not_mutate_engine_kwargs(self):
+        from arena import runner
+        kw = {"workers": 7, "save_replay": False}
+        runner._run_cases([], game_dir_root=Path("/tmp"), engine_kwargs=kw)
+        self.assertEqual(kw, {"workers": 7, "save_replay": False})
 
 
 if __name__ == "__main__":

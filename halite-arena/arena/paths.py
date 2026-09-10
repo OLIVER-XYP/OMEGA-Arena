@@ -153,8 +153,24 @@ def agents_list() -> list[dict]:
 
 
 def new_run_id(tag: str = "") -> Path:
-    ts = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
-    return runs_root() / f"{ts}-{tag or 'run'}"
+    """Allocate a fresh, unique run directory (atomic; safe within one second).
+
+    Second-granularity timestamps alone collide when two runs start in the same
+    second, silently merging their game_*/ artifacts. We reserve the directory
+    with mkdir and fall through to a ``-N`` suffix on collision.
+    """
+    stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    root = runs_root()
+    root.mkdir(parents=True, exist_ok=True)
+    base = f"{stamp}-{tag or 'run'}"
+    for i in range(1000):
+        cand = root / (base if i == 0 else f"{base}-{i}")
+        try:
+            cand.mkdir()
+            return cand
+        except FileExistsError:
+            continue
+    raise RuntimeError(f"无法分配唯一的 run 目录: {base}")
 
 
 def new_game_dir(run_id: Path, index: int) -> Path:

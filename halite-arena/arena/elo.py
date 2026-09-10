@@ -35,26 +35,42 @@ def load_matches() -> list[dict]:
 
 def apply_pair_results(pairs: list[tuple[str, str, int, int]],
                        games_per_pair: int = 11,
-                       anchors: dict[str, float] | None = None) -> dict[str, float]:
+                       anchors: dict[str, float] | None = None,
+                       run_key: str | None = None) -> dict[str, float]:
     """Recompute ratings from history + new pairs. Pairs: (bot_a, bot_b, a_wins, b_wins).
 
     anchors: {bot_name: fixed_rating} — those bots keep a fixed reference score
     (the script pool / known RL models). Ratings are computed over all pairs,
     then anchor entries are RESET to their fixed value, so agent ratings drift
     relative to a stable absolute scale instead of floating together.
+
+    run_key: identifier of the run these pairs belong to (normally the run dir).
+    Previously-recorded rows with the same key are replaced, so re-running or
+    retrying a match is idempotent instead of silently double-counting its
+    games (which inflated the ELO weight of that match).
     """
+    # Create the state dir BEFORE opening matches.jsonl: on a fresh checkout the
+    # append/open used to raise FileNotFoundError.
+    state = paths.state_dir()
+    state.mkdir(parents=True, exist_ok=True)
+
     matches = load_matches()
+    if run_key is not None:
+        matches = [m for m in matches if m.get("run") != run_key]
+
     history_pairs = [(m["a"], m["b"], m["a_wins"], m["b_wins"]) for m in matches]
+    stamp = __import__("datetime").datetime.now().isoformat(timespec="seconds")
+    new_rows = []
     for pr in pairs:
         history_pairs.append(pr)
-        matches.append({"a": pr[0], "b": pr[1], "a_wins": pr[2], "b_wins": pr[3],
-                        "date": __import__("datetime").datetime.now().isoformat(timespec="seconds")})
-    # 只保留新增的对局到 matches.jsonl
-    with open(_matches_path(), "a", encoding="utf-8") as fh:
-        for pr in pairs:
-            fh.write(json.dumps({"a": pr[0], "b": pr[1], "a_wins": pr[2], "b_wins": pr[3],
-                                 "date": __import__("datetime").datetime.now().isoformat(
-                                     timespec="seconds")}) + "\n")
+        new_rows.append({"a": pr[0], "b": pr[1], "a_wins": pr[2], "b_wins": pr[3],
+                         "date": stamp, "run": run_key})
+    # Rewrite history (deduped) + the new rows, instead of blind-appending.
+    with open(_matches_path(), "w", encoding="utf-8") as fh:
+        for m in matches:
+            fh.write(json.dumps(m) + "\n")
+        for row in new_rows:
+            fh.write(json.dumps(row) + "\n")
 
     ladder = Ladder(games_per_pair=games_per_pair)
     for a, b, aw, bw in history_pairs:

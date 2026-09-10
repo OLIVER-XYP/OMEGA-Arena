@@ -71,6 +71,19 @@ def _kill_session(sid: int) -> None:
         pass
 
 
+def _with_device(spec: BotSpec, device: str) -> BotSpec:
+    """Rebind an RL spec's device so the CLI --device flag actually takes effect.
+
+    Script/agent bots are native executables and ignore it. Without this, the
+    device passed to run_one_game is dropped and the BotSpec default ("auto")
+    wins, so `arena practice ... --device cuda:0` silently ran on auto.
+    """
+    if spec.kind == "rl" and device and device != "auto" and device != spec.device:
+        from dataclasses import replace
+        return replace(spec, device=device)
+    return spec
+
+
 def run_one_game(
     spec0: BotSpec, spec1: BotSpec, seed: int,
     *,
@@ -97,7 +110,15 @@ def run_one_game(
             tp = game_dir / f"trace_side{side}.jsonl"
             trace_paths[side] = tp
 
+    # The engine writes the replay into its cwd despite --replay-directory, but
+    # we still create the advertised dir so the flag is honest and the fallback
+    # glob below has a real target. Also apply the requested device to RL specs.
     replay_out = game_dir / "replay_out"
+    replay_out.mkdir(parents=True, exist_ok=True)
+    if device and device != "auto":
+        spec0 = _with_device(spec0, device)
+        spec1 = _with_device(spec1, device)
+
     cmd = [
         str(engine), "--width", "32", "--height", "32",
         "-s", str(seed), "--turn-limit", str(turn_limit),
@@ -165,17 +186,18 @@ def run_one_game(
         # --replay-directory flag. Move it up to game_dir root for self-containment.
         replay_path = None
         hits = sorted(cwd.glob("*.hlt")) + (sorted(replay_out.glob("*.hlt")) if save_replay else [])
-        if hits:
-            src = hits[0]
+        for src in hits:
             dest = game_dir / src.name
             try:
                 if src.resolve() != dest.resolve():
                     if dest.exists():
                         dest.unlink()
                     src.replace(dest)
-                replay_path = dest
+                moved = dest
             except Exception:
-                replay_path = src
+                moved = src
+            if replay_path is None:      # primary replay for GameRecord
+                replay_path = moved
 
     players = [spec0.short, spec1.short]
     if js is None:

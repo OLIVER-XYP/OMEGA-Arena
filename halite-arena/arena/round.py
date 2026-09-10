@@ -104,9 +104,13 @@ def run_round(*, label: str = "round", games_av: int = 2, games_pool: int = 2,
     ratings_before = dict(elo_mod.latest_ratings())
     ratings_after = ratings_before
     if pairs:
+        # Ladder's games_per_pair feeds the 'X of N' rule and is expected to be
+        # odd >= 3; round pairs play both sides, so nudge to an odd value.
+        gp = max(3, games_av + games_pool)
+        if gp % 2 == 0:
+            gp += 1
         ratings_after = elo_mod.apply_pair_results(
-            pairs, games_per_pair=max(3, games_av + games_pool),
-            anchors=ANCHOR_RATINGS)
+            pairs, games_per_pair=gp, anchors=ANCHOR_RATINGS, run_key=str(run_id))
 
     run = {
         "schema": "halite-arena/run-v2", "run_id": str(run_id), "kind": "round",

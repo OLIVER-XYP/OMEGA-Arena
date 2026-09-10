@@ -18,7 +18,11 @@ def _case_game_dir(run_id: Path, ci: int) -> Path:
 def _run_cases(cases, *, game_dir_root: Path, engine_kwargs: dict) -> list[tuple[int, GameRecord]]:
     """Run cases in parallel; returns [(case_index, record)]."""
     results = {}
-    with ThreadPoolExecutor(max_workers=engine_kwargs.pop("workers", 2)) as ex:
+    # Don't mutate the caller's dict: popping "workers" in place silently reset
+    # a reused kwargs dict's worker count back to 2 on the next call.
+    workers = engine_kwargs.get("workers", 2)
+    kwargs = {k: v for k, v in engine_kwargs.items() if k != "workers"}
+    with ThreadPoolExecutor(max_workers=workers) as ex:
         futs = {}
         for ci, case in enumerate(cases):
             gd = _case_game_dir(game_dir_root, ci)
@@ -28,7 +32,7 @@ def _run_cases(cases, *, game_dir_root: Path, engine_kwargs: dict) -> list[tuple
             spec0, spec1 = ((case.spec_a, case.spec_b) if case.side_a == 0
                             else (case.spec_b, case.spec_a))
             futs[ex.submit(run_one_game, spec0, spec1, case.seed,
-                           game_dir=gd, **engine_kwargs)] = ci
+                           game_dir=gd, **kwargs)] = ci
         for fut in as_completed(futs):
             ci = futs[fut]
             gd = _case_game_dir(game_dir_root, ci)
@@ -139,8 +143,8 @@ def run_match(bots_specs, *, games_per_pair: int = 11, workers: int = 2,
         summary.setdefault(b, {})[a] = {"games": n, "a_wins": b_wins, "b_wins": a_wins}
 
     ratings_before = dict(elo_mod.latest_ratings())
-    ratings_after = elo_mod.apply_pair_results(pairs, games_per_pair=games_per_pair) \
-        if pairs else ratings_before
+    ratings_after = elo_mod.apply_pair_results(
+        pairs, games_per_pair=games_per_pair, run_key=str(run_id)) if pairs else ratings_before
 
     run = {"schema": "halite-arena/run-v1", "run_id": str(run_id), "kind": "match",
            "participants": [s.short for s in bots_specs], "games_per_pair": games_per_pair,

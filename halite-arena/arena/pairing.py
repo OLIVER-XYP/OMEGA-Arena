@@ -45,9 +45,12 @@ def round_cases(agents: Sequence[BotSpec], pool: Sequence[BotSpec],
                 cases.append(Case(a, b, s, 1))
             pair_idx += 1
     # agent vs pool
+    # Uses a disjoint high namespace: the agent-vs-agent block above consumes
+    # base + pair_idx*100_000, which reaches 1_000_000 at pair_idx=10 and would
+    # otherwise collide with this block (same map played for two matchups).
     for i, a in enumerate(agents):
         for pi, t in enumerate(pool):
-            s = base_off + 1_000_000 + i * 10_000 + pi * 10
+            s = base_off + 1_000_000_000 + i * 10_000 + pi * 10
             for g in range(games_pool):
                 cases.append(Case(a, t, s + g, 0))
                 cases.append(Case(a, t, s + g, 1))
@@ -70,9 +73,12 @@ def roundrobin_cases(bots: Sequence[BotSpec], games_per_pair: int = 11,
                      base: int = 0) -> list[Case]:
     """All unordered pairs (i<j); same-seed both sides for fairness.
     games_per_pair must be odd >= 3 so each pair has at least one same-seed
-    double (side 0 + side 1)."""
+    double (side 0 + side 1). Invalid values are rejected rather than silently
+    rewritten: a caller that records its requested value (e.g. run.json's
+    games_per_pair) would otherwise disagree with the games actually played,
+    and the ELO pair weights would be wrong."""
     if games_per_pair < 3 or games_per_pair % 2 == 0:
-        games_per_pair = 3
+        raise ValueError(f"games_per_pair 必须是奇数且 >= 3，收到 {games_per_pair}")
     cases = []
     n = len(bots)
     pair_idx = 0

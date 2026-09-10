@@ -42,9 +42,12 @@ def top_pool_ids(k: int, exclude: set[str] | None = None) -> list[str]:
         i = r["id"]
         if i in exclude:
             continue
-        # 只取实体存在的（missing 的不作对手）
-        if index and not index.get(i, {}).get("present", True):
-            continue
+        # 只取实体存在的（missing 的不作对手）。索引存在但该 id 不在索引里
+        # 也算不可用——此前 default=True 会把 non-existent id 当作可下注的对手。
+        if index:
+            ent = index.get(i)
+            if not ent or not ent.get("present", False):
+                continue
         out.append(i)
         if len(out) >= k:
             break
@@ -61,13 +64,24 @@ def resolve_checkpoint(pool_id: str) -> Path:
     ent = index.get("entries", {}).get(pool_id)
     if ent and ent.get("present") and ent.get("file"):
         return C.OMEGA_ROOT / ent["file"]            # file 相对 OMEGA 根（bots/pool/..）
-    # 2) 兼容 registry（path 已指向 OMEGA pool）
+    # 2) 兼容 registry。registry 的 path/path_omega 现在是**仓库相对**路径
+    #    （bots/pool/..），必须相对 OMEGA_ROOT 解析：引擎以 game_dir/engine_cwd
+    #    为 cwd 运行 bot，裸相对路径在那里解析不到 checkpoint。
     if C.BOT_REGISTRY.exists():
         try:
             reg = json.loads(C.BOT_REGISTRY.read_text(encoding="utf-8"))
             for b in reg.get("bots", []):
-                if b.get("id") == pool_id and b.get("path") and Path(b["path"]).exists():
-                    return Path(b["path"])
+                if b.get("id") != pool_id:
+                    continue
+                for key in ("path_omega", "path"):
+                    raw = b.get(key)
+                    if not raw:
+                        continue
+                    p = Path(raw)
+                    if not p.is_absolute():
+                        p = C.OMEGA_ROOT / p
+                    if p.exists():
+                        return p
         except Exception:
             pass
     # 3) 规范 id→文件 规则直取 pool

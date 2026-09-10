@@ -16,8 +16,10 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -115,6 +117,39 @@ class TestPracticeOneVOne(unittest.TestCase):
         self.assertEqual(self.verify_res.returncode, 0,
                          f"verify failed:\n{self.verify_res.stdout}\n{self.verify_res.stderr}")
         self.assertIn("0 fail", self.verify_res.stdout)
+
+
+@unittest.skipIf(SKIP, "ARENA_SKIP_INTEGRATION=1")
+class TestCompileFailureClearsStaleArtifact(unittest.TestCase):
+    """A failed compile must not leave the previous bot or an ok=True result."""
+
+    @unittest.skipUnless(shutil.which("g++"), "g++ not available")
+    def test_failed_compile_removes_bot_and_records_failure(self):
+        from arena import compile as compile_mod
+        from arena import paths as paths_mod
+
+        with tempfile.TemporaryDirectory() as d:
+            a = Path(d) / "agent"
+            (a / "materials" / "cpp").mkdir(parents=True)
+            (a / "materials" / "cpp" / "MyBot.cpp").write_text("int main(){ this is broken }")
+            (a / "submit").mkdir()
+            # a previous successful artifact that must not survive
+            (a / "build").mkdir()
+            (a / "build" / "bot").write_bytes(b"stale")
+            (a / "build" / "compile_result.json").write_text('{"ok": true}')
+
+            orig = paths_mod.agent_dir
+            paths_mod.agent_dir = lambda n: a          # type: ignore[assignment]
+            try:
+                res = compile_mod.compile_agent("x")
+            finally:
+                paths_mod.agent_dir = orig             # type: ignore[assignment]
+
+            self.assertFalse(res.ok)
+            self.assertFalse((a / "build" / "bot").exists(), "stale bot survived a failed compile")
+            on_disk = json.loads((a / "build" / "compile_result.json").read_text())
+            self.assertFalse(on_disk["ok"])
+            self.assertEqual(on_disk["error_kind"], "compile_error")
 
 
 if __name__ == "__main__":

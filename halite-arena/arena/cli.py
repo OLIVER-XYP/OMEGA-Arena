@@ -174,6 +174,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def cmd_match(args) -> int:
+    # roundrobin_cases rejects invalid counts instead of silently coercing them
+    # (which made run.json's games_per_pair disagree with the games played).
+    if args.games < 3 or args.games % 2 == 0:
+        print(f"[match] --games 必须是奇数且 >= 3，收到 {args.games}")
+        return 2
     specs = []
     for tok in args.participants:
         spec = _resolve_target(tok)
