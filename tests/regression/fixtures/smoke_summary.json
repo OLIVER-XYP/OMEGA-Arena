@@ -1,0 +1,39 @@
+{
+  "bot": "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\Release\\MyBot.exe",
+  "engine": "E:\\Halite-III\\game_engine\\build-modernization-check\\Release\\halite.exe",
+  "results": [
+    {
+      "case": {
+        "height": 32,
+        "players": 2,
+        "seed": 101,
+        "turn_limit": 20,
+        "width": 32
+      },
+      "ok": true,
+      "return_code": 0,
+      "stderr_tail": "",
+      "summary": {
+        "error_logs": {},
+        "stats": {
+          "0": {
+            "last_turn_alive": null,
+            "rank": 2,
+            "score": 5000,
+            "ships_spawned": null,
+            "total_production": null
+          },
+          "1": {
+            "last_turn_alive": null,
+            "rank": 1,
+            "score": 5000,
+            "ships_spawned": null,
+            "total_production": null
+          }
+        },
+        "terminated": {}
+      },
+      "summary_hash": "8568923b382df8b7"
+    }
+  ]
+}

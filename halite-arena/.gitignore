@@ -1,0 +1,15 @@
+agents/*/build/
+agents/*/last_game/
+runs/
+state/*.json
+__pycache__/
+*.pyc
+
+# 材料副本（只读，可从 starter_kits/ 重新生成）
+agents/*/materials/cpp/
+agents/*/materials/engine_src/
+agents/*/materials/rules.md
+rules.md
+
+# 恶意/失控 agent 测试产物（不进入正式轮）
+agents/scratch/

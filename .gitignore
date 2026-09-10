@@ -1,0 +1,38 @@
+# ---- weights (hosted on HuggingFace / ModelScope, NOT in git) ----
+bots/pool/
+_staging/
+
+# ---- build artifacts / regenerable ----
+**/node_modules/
+**/__pycache__/
+*.pyc
+**/build/
+**/build_*/
+**/dist/
+website/_site/
+website/vendor/
+**/*.wast
+**/*.wasm
+
+# ---- arena runtime state ----
+halite-arena/runs/
+halite-arena/state/*.json
+halite-arena/agents/*/build/
+halite-arena/agents/*/last_game/
+halite-arena/agents/*/materials/
+halite-arena/agents/scratch/
+
+# ---- regenerable model artifacts ----
+starter_kits/ml/SVM/*.svc
+starter_kits/ml/SVM/halite
+
+# ---- misc ----
+*.log
+*.tmp
+.DS_Store
+
+# ---- arena runtime state (local) ----
+halite-arena/state/*.jsonl
+
+# ---- local-only, never published ----
+archive/_private/

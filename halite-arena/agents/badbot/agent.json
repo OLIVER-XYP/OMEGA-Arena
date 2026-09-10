@@ -1,0 +1,6 @@
+{
+ "name": "badbot",
+ "kind": "cpp",
+ "created_at": "2026-09-09T16:39:58",
+ "params": "agents/badbot/params/bot_params.txt"
+}

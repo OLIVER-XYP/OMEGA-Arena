@@ -1,0 +1,44 @@
+{
+ "champion": "E:\\Halite-III\\starter_kits\\C++\\train_runs_behavior\\best_params.txt",
+ "seeds": 100,
+ "results": {
+  "eco": {
+   "win_rate": 0.545,
+   "wilson_lb": 0.47578485036961143,
+   "wins": 109,
+   "games": 200
+  },
+  "aggro": {
+   "win_rate": 0.12,
+   "wilson_lb": 0.08197935023887544,
+   "wins": 24,
+   "games": 200
+  },
+  "control": {
+   "win_rate": 0.47,
+   "wilson_lb": 0.40204633370871073,
+   "wins": 94,
+   "games": 200
+  },
+  "adaptive": {
+   "win_rate": 0.545,
+   "wilson_lb": 0.47578485036961143,
+   "wins": 109,
+   "games": 200
+  },
+  "super_eco": {
+   "win_rate": 0.01,
+   "wilson_lb": 0.0027466006037749346,
+   "wins": 2,
+   "games": 200
+  },
+  "mixed": {
+   "win_rate": 0.01,
+   "wilson_lb": 0.0027466006037749346,
+   "wins": 2,
+   "games": 200
+  }
+ },
+ "best": "eco",
+ "expert_found": false
+}

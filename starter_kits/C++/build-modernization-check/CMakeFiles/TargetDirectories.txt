@@ -1,0 +1,3 @@
+E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/MyBot.dir
+E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/ALL_BUILD.dir
+E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/ZERO_CHECK.dir

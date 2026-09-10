@@ -1,0 +1,20 @@
+source "https://rubygems.org"
+ruby RUBY_VERSION
+
+gem "jekyll", "~> 4.3"
+gem "webrick"
+gem "logger"
+gem "csv"
+gem "base64"
+gem "bigdecimal"
+gem "rexml"
+
+group :jekyll_plugins do
+  gem "jekyll-feed", "~> 0.17"
+  gem "jekyll-toc"
+  gem "jekyll-seo-tag"
+end
+
+gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
+gem "rb-fsevent", "0.9.8"
+gem "wdm", ">= 0.1.0" if Gem.win_platform?

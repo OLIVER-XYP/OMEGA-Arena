@@ -1,0 +1,49 @@
+{
+ "champion": "E:\\Halite-III\\starter_kits\\C++\\train_runs_behavior\\best_params.txt",
+ "seeds": 100,
+ "results": {
+  "eco_defend": {
+   "win_rate": 0.74,
+   "wilson_lb": 0.675091286087069,
+   "wins": 148,
+   "games": 200,
+   "params": "E:\\Halite-III\\starter_kits\\C++\\sweep_killer\\eco_defend.txt"
+  },
+  "eco_ta": {
+   "win_rate": 0.595,
+   "wilson_lb": 0.5257958199999483,
+   "wins": 119,
+   "games": 200,
+   "params": "E:\\Halite-III\\starter_kits\\C++\\sweep_killer\\eco_ta.txt"
+  },
+  "eco_defend_ta": {
+   "win_rate": 0.73,
+   "wilson_lb": 0.664564384587978,
+   "wins": 146,
+   "games": 200,
+   "params": "E:\\Halite-III\\starter_kits\\C++\\sweep_killer\\eco_defend_ta.txt"
+  },
+  "champ_ta": {
+   "win_rate": 0.48,
+   "wilson_lb": 0.4117904407948983,
+   "wins": 96,
+   "games": 200,
+   "params": "E:\\Halite-III\\starter_kits\\C++\\sweep_killer\\champ_ta.txt"
+  },
+  "champ_nocamp": {
+   "win_rate": 0.615,
+   "wilson_lb": 0.5459973878179245,
+   "wins": 123,
+   "games": 200,
+   "params": "E:\\Halite-III\\starter_kits\\C++\\sweep_killer\\champ_nocamp.txt"
+  },
+  "champ_nocamp_ta": {
+   "win_rate": 0.49,
+   "wilson_lb": 0.4215615528275274,
+   "wins": 98,
+   "games": 200,
+   "params": "E:\\Halite-III\\starter_kits\\C++\\sweep_killer\\champ_nocamp_ta.txt"
+  }
+ },
+ "best": "eco_defend"
+}

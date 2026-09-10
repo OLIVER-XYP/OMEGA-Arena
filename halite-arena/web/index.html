@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Halite Arena — 主视图</title>
+<link rel="stylesheet" href="/web/style.css">
+</head>
+<body>
+<header>
+  <h1>⚔ Halite Agent 对战平台</h1>
+  <nav><a href="/">主视图</a> · <a href="/replay">复盘</a></nav>
+</header>
+
+<main>
+  <section id="entry">
+    <h2>发起对决</h2>
+    <p class="hint">agent vs 对手（双侧配对，异步跑；轮询下方状态）</p>
+    <div class="row">
+      <label>我方 agent
+        <select id="sel-agent"></select>
+      </label>
+      <label>对手（可多选）
+        <select id="sel-targets" multiple size="8"></select>
+      </label>
+      <label>每对手 seed 对
+        <input id="inp-seeds" type="number" value="2" min="1" max="5">
+      </label>
+      <button id="btn-practice">开始 practice</button>
+    </div>
+    <div id="run-status" class="status"></div>
+  </section>
+
+  <section id="agents">
+    <h2>Agent 总览</h2>
+    <table id="tbl-agents">
+      <thead><tr><th>Agent</th><th>ELO</th><th>材料</th><th>最近反馈</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="runs">
+    <h2>最近对局
+      <select id="sel-kind" onchange="loadRuns()">
+        <option value="">全部</option>
+        <option>practice</option>
+        <option>match</option>
+        <option>round</option>
+      </select>
+    </h2>
+    <table id="tbl-runs">
+      <thead><tr><th>run id</th><th>kind</th><th>参与方</th><th>failed</th><th>摘要</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</main>
+
+<script src="/web/app.js"></script>
+</body>
+</html>

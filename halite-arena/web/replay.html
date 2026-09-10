@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Halite Arena — 复盘</title>
+<link rel="stylesheet" href="/web/style.css">
+</head>
+<body>
+<header>
+  <h1>🎬 复盘</h1>
+  <nav>
+    <select id="sel-run" onchange="loadRun(this.value)"></select>
+    <a href="/">← 主视图</a>
+  </nav>
+</header>
+
+<main>
+  <div id="game-picker" class="row"></div>
+  <div id="canvas-wrap"><canvas id="cv" width="640" height="640"></canvas></div>
+
+  <div class="row" id="controls">
+    <button id="b-play">▶</button>
+    <button id="b-prev">⏮</button>
+    <button id="b-next">⏭</button>
+    <span>回合 <span id="lbl-turn">0</span>/<span id="lbl-total">0</span></span>
+    <label>速度 <input id="speed" type="range" min="1" max="200" value="30"></label>
+  </div>
+
+  <div id="scoreboard" class="box"></div>
+  <div class="row">
+    <button id="b-verify" class="secondary">🔍 verify 本局（完整性/自洽/真实性）</button>
+    <pre id="verify-out" class="box" style="width:100%"></pre>
+  </div>
+</main>
+
+<script src="/web/replay.js"></script>
+</body>
+</html>

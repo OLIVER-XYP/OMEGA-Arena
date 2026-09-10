@@ -1,0 +1,1427 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:212 (message)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      The system is: Windows - 10.0.26200 - AMD64
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:468 (find_file)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:506 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/"
+    found: "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "c:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\resources\\helpers"
+        - "C:\\Ruby40-x64\\bin"
+        - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
+        - "D:\\Python\\Python312\\Scripts\\"
+        - "D:\\Python\\Python312\\"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\Docker\\Docker\\resources\\bin"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Git\\cmd"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\"
+        - "C:\\ProgramData\\chocolatey\\bin"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\hp\\.local\\bin"
+        - "C:\\Users\\hp\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Microsoft VS Code\\bin"
+        - "D:\\MiKTeX\\miktex\\bin\\x64\\"
+        - "C:\\Users\\hp\\.lmstudio\\bin"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\node_global"
+        - "C:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler:  
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      MSBuild version 17.14.40+3e7442088 for .NET Framework
+      Build started 10/05/2026 16:56:49.
+      
+      Project "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\4.3.2\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
+      PrepareForBuild:
+        Creating directory "Debug\\".
+        Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+        Creating directory "Debug\\CompilerIdC.tlog\\".
+      InitializeBuildStatus:
+        Creating "Debug\\CompilerIdC.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+        Touching "Debug\\CompilerIdC.tlog\\unsuccessfulbuild".
+      ClCompile:
+        C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc143.pdb" /external:W0 /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
+        CMakeCCompilerId.c
+      Link:
+        C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdC.lib" /MACHINE:X64 Debug\\CMakeCCompilerId.obj
+        CompilerIdC.vcxproj -> E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\4.3.2\\CompilerIdC\\CompilerIdC.exe
+      PostBuildEvent:
+        for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
+        :VCEnd
+        CMAKE_C_COMPILER=C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe
+      FinalizeBuildStatus:
+        Deleting file "Debug\\CompilerIdC.tlog\\unsuccessfulbuild".
+        Touching "Debug\\CompilerIdC.tlog\\CompilerIdC.lastbuildstate".
+      Done Building Project "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\4.3.2\\CompilerIdC\\CompilerIdC.vcxproj" (default targets).
+      
+      Build succeeded.
+          0 Warning(s)
+          0 Error(s)
+      
+      Time Elapsed 00:00:00.70
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
+      
+      The C compiler identification is MSVC, found in:
+        E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/4.3.2/CompilerIdC/CompilerIdC.exe
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:37 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:65 (__resolve_tool_path)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:103 (__resolve_linker_path)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "_CMAKE_TOOL_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "link"
+    candidate_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/"
+      - "C:/Ruby40-x64/bin/"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/"
+      - "D:/Python/Python312/Scripts/"
+      - "D:/Python/Python312/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
+      - "C:/Program Files/Docker/Docker/resources/bin/"
+      - "D:/jdk-17/bin/"
+      - "D:/Git/cmd/"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/"
+      - "D:/MySQL/MySQL Server 8.0/bin/"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/"
+      - "D:/nodejs/"
+      - "C:/ProgramData/chocolatey/bin/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/hp/.local/bin/"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/"
+      - "D:/Microsoft VS Code/bin/"
+      - "D:/MiKTeX/miktex/bin/x64/"
+      - "C:/Users/hp/.lmstudio/bin/"
+      - "D:/nodejs/node_global/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/"
+    searched_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.com"
+    found: "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe"
+    search_context:
+      ENV{PATH}:
+        - "c:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\resources\\helpers"
+        - "C:\\Ruby40-x64\\bin"
+        - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
+        - "D:\\Python\\Python312\\Scripts\\"
+        - "D:\\Python\\Python312\\"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\Docker\\Docker\\resources\\bin"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Git\\cmd"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\"
+        - "C:\\ProgramData\\chocolatey\\bin"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\hp\\.local\\bin"
+        - "C:\\Users\\hp\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Microsoft VS Code\\bin"
+        - "D:\\MiKTeX\\miktex\\bin\\x64\\"
+        - "C:\\Users\\hp\\.lmstudio\\bin"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\node_global"
+        - "C:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:37 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:65 (__resolve_tool_path)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:104 (__resolve_linker_path)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "_CMAKE_TOOL_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "lld-link"
+    candidate_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/"
+      - "C:/Ruby40-x64/bin/"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/"
+      - "D:/Python/Python312/Scripts/"
+      - "D:/Python/Python312/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
+      - "C:/Program Files/Docker/Docker/resources/bin/"
+      - "D:/jdk-17/bin/"
+      - "D:/Git/cmd/"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/"
+      - "D:/MySQL/MySQL Server 8.0/bin/"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/"
+      - "D:/nodejs/"
+      - "C:/ProgramData/chocolatey/bin/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/hp/.local/bin/"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/"
+      - "D:/Microsoft VS Code/bin/"
+      - "D:/MiKTeX/miktex/bin/x64/"
+      - "C:/Users/hp/.lmstudio/bin/"
+      - "D:/nodejs/node_global/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/"
+    searched_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link.com"
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link.exe"
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/lld-link.com"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/lld-link.exe"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/lld-link"
+      - "C:/Ruby40-x64/bin/lld-link.com"
+      - "C:/Ruby40-x64/bin/lld-link.exe"
+      - "C:/Ruby40-x64/bin/lld-link"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/lld-link.com"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/lld-link.exe"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/lld-link"
+      - "D:/Python/Python312/Scripts/lld-link.com"
+      - "D:/Python/Python312/Scripts/lld-link.exe"
+      - "D:/Python/Python312/Scripts/lld-link"
+      - "D:/Python/Python312/lld-link.com"
+      - "D:/Python/Python312/lld-link.exe"
+      - "D:/Python/Python312/lld-link"
+      - "C:/Windows/System32/lld-link.com"
+      - "C:/Windows/System32/lld-link.exe"
+      - "C:/Windows/System32/lld-link"
+      - "C:/Windows/lld-link.com"
+      - "C:/Windows/lld-link.exe"
+      - "C:/Windows/lld-link"
+      - "C:/Windows/System32/wbem/lld-link.com"
+      - "C:/Windows/System32/wbem/lld-link.exe"
+      - "C:/Windows/System32/wbem/lld-link"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/lld-link.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/lld-link.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/lld-link"
+      - "C:/Windows/System32/OpenSSH/lld-link.com"
+      - "C:/Windows/System32/OpenSSH/lld-link.exe"
+      - "C:/Windows/System32/OpenSSH/lld-link"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/lld-link.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/lld-link.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/lld-link"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/lld-link.com"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/lld-link.exe"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/lld-link"
+      - "C:/Program Files/Docker/Docker/resources/bin/lld-link.com"
+      - "C:/Program Files/Docker/Docker/resources/bin/lld-link.exe"
+      - "C:/Program Files/Docker/Docker/resources/bin/lld-link"
+      - "D:/jdk-17/bin/lld-link.com"
+      - "D:/jdk-17/bin/lld-link.exe"
+      - "D:/jdk-17/bin/lld-link"
+      - "D:/Git/cmd/lld-link.com"
+      - "D:/Git/cmd/lld-link.exe"
+      - "D:/Git/cmd/lld-link"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/lld-link.com"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/lld-link.exe"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/lld-link"
+      - "D:/MySQL/MySQL Server 8.0/bin/lld-link.com"
+      - "D:/MySQL/MySQL Server 8.0/bin/lld-link.exe"
+      - "D:/MySQL/MySQL Server 8.0/bin/lld-link"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/lld-link.com"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/lld-link.exe"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/lld-link"
+      - "D:/nodejs/lld-link.com"
+      - "D:/nodejs/lld-link.exe"
+      - "D:/nodejs/lld-link"
+      - "C:/ProgramData/chocolatey/bin/lld-link.com"
+      - "C:/ProgramData/chocolatey/bin/lld-link.exe"
+      - "C:/ProgramData/chocolatey/bin/lld-link"
+      - "C:/Program Files/CMake/bin/lld-link.com"
+      - "C:/Program Files/CMake/bin/lld-link.exe"
+      - "C:/Program Files/CMake/bin/lld-link"
+      - "C:/Users/hp/.local/bin/lld-link.com"
+      - "C:/Users/hp/.local/bin/lld-link.exe"
+      - "C:/Users/hp/.local/bin/lld-link"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/lld-link.com"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/lld-link.exe"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/lld-link"
+      - "D:/Microsoft VS Code/bin/lld-link.com"
+      - "D:/Microsoft VS Code/bin/lld-link.exe"
+      - "D:/Microsoft VS Code/bin/lld-link"
+      - "D:/MiKTeX/miktex/bin/x64/lld-link.com"
+      - "D:/MiKTeX/miktex/bin/x64/lld-link.exe"
+      - "D:/MiKTeX/miktex/bin/x64/lld-link"
+      - "C:/Users/hp/.lmstudio/bin/lld-link.com"
+      - "C:/Users/hp/.lmstudio/bin/lld-link.exe"
+      - "C:/Users/hp/.lmstudio/bin/lld-link"
+      - "D:/nodejs/node_global/lld-link.com"
+      - "D:/nodejs/node_global/lld-link.exe"
+      - "D:/nodejs/node_global/lld-link"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/lld-link.com"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/lld-link.exe"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/lld-link"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "c:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\resources\\helpers"
+        - "C:\\Ruby40-x64\\bin"
+        - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
+        - "D:\\Python\\Python312\\Scripts\\"
+        - "D:\\Python\\Python312\\"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\Docker\\Docker\\resources\\bin"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Git\\cmd"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\"
+        - "C:\\ProgramData\\chocolatey\\bin"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\hp\\.local\\bin"
+        - "C:\\Users\\hp\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Microsoft VS Code\\bin"
+        - "D:\\MiKTeX\\miktex\\bin\\x64\\"
+        - "C:\\Users\\hp\\.lmstudio\\bin"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\node_global"
+        - "C:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_LINKER"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "link"
+    candidate_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/"
+      - "C:/Ruby40-x64/bin/"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/"
+      - "D:/Python/Python312/Scripts/"
+      - "D:/Python/Python312/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
+      - "C:/Program Files/Docker/Docker/resources/bin/"
+      - "D:/jdk-17/bin/"
+      - "D:/Git/cmd/"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/"
+      - "D:/MySQL/MySQL Server 8.0/bin/"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/"
+      - "D:/nodejs/"
+      - "C:/ProgramData/chocolatey/bin/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/hp/.local/bin/"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/"
+      - "D:/Microsoft VS Code/bin/"
+      - "D:/MiKTeX/miktex/bin/x64/"
+      - "C:/Users/hp/.lmstudio/bin/"
+      - "D:/nodejs/node_global/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/"
+    searched_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.com"
+    found: "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe"
+    search_context:
+      ENV{PATH}:
+        - "c:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\resources\\helpers"
+        - "C:\\Ruby40-x64\\bin"
+        - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
+        - "D:\\Python\\Python312\\Scripts\\"
+        - "D:\\Python\\Python312\\"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\Docker\\Docker\\resources\\bin"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Git\\cmd"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\"
+        - "C:\\ProgramData\\chocolatey\\bin"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\hp\\.local\\bin"
+        - "C:\\Users\\hp\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Microsoft VS Code\\bin"
+        - "D:\\MiKTeX\\miktex\\bin\\x64\\"
+        - "C:\\Users\\hp\\.lmstudio\\bin"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\node_global"
+        - "C:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_MT"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "mt"
+    candidate_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/"
+      - "C:/Ruby40-x64/bin/"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/"
+      - "D:/Python/Python312/Scripts/"
+      - "D:/Python/Python312/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
+      - "C:/Program Files/Docker/Docker/resources/bin/"
+      - "D:/jdk-17/bin/"
+      - "D:/Git/cmd/"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/"
+      - "D:/MySQL/MySQL Server 8.0/bin/"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/"
+      - "D:/nodejs/"
+      - "C:/ProgramData/chocolatey/bin/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/hp/.local/bin/"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/"
+      - "D:/Microsoft VS Code/bin/"
+      - "D:/MiKTeX/miktex/bin/x64/"
+      - "C:/Users/hp/.lmstudio/bin/"
+      - "D:/nodejs/node_global/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/"
+    searched_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/mt.com"
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/mt.exe"
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/mt"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/mt.com"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/mt.exe"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/mt"
+      - "C:/Ruby40-x64/bin/mt.com"
+      - "C:/Ruby40-x64/bin/mt.exe"
+      - "C:/Ruby40-x64/bin/mt"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/mt.com"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/mt.exe"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/mt"
+      - "D:/Python/Python312/Scripts/mt.com"
+      - "D:/Python/Python312/Scripts/mt.exe"
+      - "D:/Python/Python312/Scripts/mt"
+      - "D:/Python/Python312/mt.com"
+      - "D:/Python/Python312/mt.exe"
+      - "D:/Python/Python312/mt"
+      - "C:/Windows/System32/mt.com"
+      - "C:/Windows/System32/mt.exe"
+      - "C:/Windows/System32/mt"
+      - "C:/Windows/mt.com"
+      - "C:/Windows/mt.exe"
+      - "C:/Windows/mt"
+      - "C:/Windows/System32/wbem/mt.com"
+      - "C:/Windows/System32/wbem/mt.exe"
+      - "C:/Windows/System32/wbem/mt"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/mt.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/mt.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/mt"
+      - "C:/Windows/System32/OpenSSH/mt.com"
+      - "C:/Windows/System32/OpenSSH/mt.exe"
+      - "C:/Windows/System32/OpenSSH/mt"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/mt.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/mt.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/mt"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/mt.com"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/mt.exe"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/mt"
+      - "C:/Program Files/Docker/Docker/resources/bin/mt.com"
+      - "C:/Program Files/Docker/Docker/resources/bin/mt.exe"
+      - "C:/Program Files/Docker/Docker/resources/bin/mt"
+      - "D:/jdk-17/bin/mt.com"
+      - "D:/jdk-17/bin/mt.exe"
+      - "D:/jdk-17/bin/mt"
+      - "D:/Git/cmd/mt.com"
+      - "D:/Git/cmd/mt.exe"
+      - "D:/Git/cmd/mt"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/mt.com"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/mt.exe"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/mt"
+      - "D:/MySQL/MySQL Server 8.0/bin/mt.com"
+      - "D:/MySQL/MySQL Server 8.0/bin/mt.exe"
+      - "D:/MySQL/MySQL Server 8.0/bin/mt"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/mt.com"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/mt.exe"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/mt"
+      - "D:/nodejs/mt.com"
+      - "D:/nodejs/mt.exe"
+      - "D:/nodejs/mt"
+      - "C:/ProgramData/chocolatey/bin/mt.com"
+      - "C:/ProgramData/chocolatey/bin/mt.exe"
+      - "C:/ProgramData/chocolatey/bin/mt"
+      - "C:/Program Files/CMake/bin/mt.com"
+      - "C:/Program Files/CMake/bin/mt.exe"
+      - "C:/Program Files/CMake/bin/mt"
+      - "C:/Users/hp/.local/bin/mt.com"
+      - "C:/Users/hp/.local/bin/mt.exe"
+      - "C:/Users/hp/.local/bin/mt"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/mt.com"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/mt.exe"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/mt"
+      - "D:/Microsoft VS Code/bin/mt.com"
+      - "D:/Microsoft VS Code/bin/mt.exe"
+      - "D:/Microsoft VS Code/bin/mt"
+      - "D:/MiKTeX/miktex/bin/x64/mt.com"
+      - "D:/MiKTeX/miktex/bin/x64/mt.exe"
+      - "D:/MiKTeX/miktex/bin/x64/mt"
+      - "C:/Users/hp/.lmstudio/bin/mt.com"
+      - "C:/Users/hp/.lmstudio/bin/mt.exe"
+      - "C:/Users/hp/.lmstudio/bin/mt"
+      - "D:/nodejs/node_global/mt.com"
+      - "D:/nodejs/node_global/mt.exe"
+      - "D:/nodejs/node_global/mt"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/mt.com"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/mt.exe"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/mt"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "c:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\resources\\helpers"
+        - "C:\\Ruby40-x64\\bin"
+        - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
+        - "D:\\Python\\Python312\\Scripts\\"
+        - "D:\\Python\\Python312\\"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\Docker\\Docker\\resources\\bin"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Git\\cmd"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\"
+        - "C:\\ProgramData\\chocolatey\\bin"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\hp\\.local\\bin"
+        - "C:\\Users\\hp\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Microsoft VS Code\\bin"
+        - "D:\\MiKTeX\\miktex\\bin\\x64\\"
+        - "C:\\Users\\hp\\.lmstudio\\bin"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\node_global"
+        - "C:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_AR"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "lib"
+    candidate_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/"
+      - "C:/Ruby40-x64/bin/"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/"
+      - "D:/Python/Python312/Scripts/"
+      - "D:/Python/Python312/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
+      - "C:/Program Files/Docker/Docker/resources/bin/"
+      - "D:/jdk-17/bin/"
+      - "D:/Git/cmd/"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/"
+      - "D:/MySQL/MySQL Server 8.0/bin/"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/"
+      - "D:/nodejs/"
+      - "C:/ProgramData/chocolatey/bin/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/hp/.local/bin/"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/"
+      - "D:/Microsoft VS Code/bin/"
+      - "D:/MiKTeX/miktex/bin/x64/"
+      - "C:/Users/hp/.lmstudio/bin/"
+      - "D:/nodejs/node_global/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/"
+    searched_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.com"
+    found: "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe"
+    search_context:
+      ENV{PATH}:
+        - "c:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\resources\\helpers"
+        - "C:\\Ruby40-x64\\bin"
+        - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
+        - "D:\\Python\\Python312\\Scripts\\"
+        - "D:\\Python\\Python312\\"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\Docker\\Docker\\resources\\bin"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Git\\cmd"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\"
+        - "C:\\ProgramData\\chocolatey\\bin"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\hp\\.local\\bin"
+        - "C:\\Users\\hp\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Microsoft VS Code\\bin"
+        - "D:\\MiKTeX\\miktex\\bin\\x64\\"
+        - "C:\\Users\\hp\\.lmstudio\\bin"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\node_global"
+        - "C:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:468 (find_file)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:506 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/"
+    found: "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "c:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\resources\\helpers"
+        - "C:\\Ruby40-x64\\bin"
+        - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
+        - "D:\\Python\\Python312\\Scripts\\"
+        - "D:\\Python\\Python312\\"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\Docker\\Docker\\resources\\bin"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Git\\cmd"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\"
+        - "C:\\ProgramData\\chocolatey\\bin"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\hp\\.local\\bin"
+        - "C:\\Users\\hp\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Microsoft VS Code\\bin"
+        - "D:\\MiKTeX\\miktex\\bin\\x64\\"
+        - "C:\\Users\\hp\\.lmstudio\\bin"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\node_global"
+        - "C:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler:  
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      MSBuild version 17.14.40+3e7442088 for .NET Framework
+      Build started 10/05/2026 16:56:50.
+      
+      Project "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\4.3.2\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
+      PrepareForBuild:
+        Creating directory "Debug\\".
+        Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+        Creating directory "Debug\\CompilerIdCXX.tlog\\".
+      InitializeBuildStatus:
+        Creating "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+        Touching "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
+      ClCompile:
+        C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc143.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
+        CMakeCXXCompilerId.cpp
+      Link:
+        C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCXX.lib" /MACHINE:X64 Debug\\CMakeCXXCompilerId.obj
+        CompilerIdCXX.vcxproj -> E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\4.3.2\\CompilerIdCXX\\CompilerIdCXX.exe
+      PostBuildEvent:
+        for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
+        :VCEnd
+        CMAKE_CXX_COMPILER=C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe
+      FinalizeBuildStatus:
+        Deleting file "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
+        Touching "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.lastbuildstate".
+      Done Building Project "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\4.3.2\\CompilerIdCXX\\CompilerIdCXX.vcxproj" (default targets).
+      
+      Build succeeded.
+          0 Warning(s)
+          0 Error(s)
+      
+      Time Elapsed 00:00:00.75
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
+      
+      The CXX compiler identification is MSVC, found in:
+        E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/4.3.2/CompilerIdCXX/CompilerIdCXX.exe
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:37 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:65 (__resolve_tool_path)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:104 (__resolve_linker_path)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "_CMAKE_TOOL_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "lld-link"
+    candidate_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/"
+      - "C:/Ruby40-x64/bin/"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/"
+      - "D:/Python/Python312/Scripts/"
+      - "D:/Python/Python312/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
+      - "C:/Program Files/Docker/Docker/resources/bin/"
+      - "D:/jdk-17/bin/"
+      - "D:/Git/cmd/"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/"
+      - "D:/MySQL/MySQL Server 8.0/bin/"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/"
+      - "D:/nodejs/"
+      - "C:/ProgramData/chocolatey/bin/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/hp/.local/bin/"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/"
+      - "D:/Microsoft VS Code/bin/"
+      - "D:/MiKTeX/miktex/bin/x64/"
+      - "C:/Users/hp/.lmstudio/bin/"
+      - "D:/nodejs/node_global/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/"
+    searched_directories:
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link.com"
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link.exe"
+      - "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/lld-link.com"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/lld-link.exe"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/lld-link"
+      - "C:/Ruby40-x64/bin/lld-link.com"
+      - "C:/Ruby40-x64/bin/lld-link.exe"
+      - "C:/Ruby40-x64/bin/lld-link"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/lld-link.com"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/lld-link.exe"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/lld-link"
+      - "D:/Python/Python312/Scripts/lld-link.com"
+      - "D:/Python/Python312/Scripts/lld-link.exe"
+      - "D:/Python/Python312/Scripts/lld-link"
+      - "D:/Python/Python312/lld-link.com"
+      - "D:/Python/Python312/lld-link.exe"
+      - "D:/Python/Python312/lld-link"
+      - "C:/Windows/System32/lld-link.com"
+      - "C:/Windows/System32/lld-link.exe"
+      - "C:/Windows/System32/lld-link"
+      - "C:/Windows/lld-link.com"
+      - "C:/Windows/lld-link.exe"
+      - "C:/Windows/lld-link"
+      - "C:/Windows/System32/wbem/lld-link.com"
+      - "C:/Windows/System32/wbem/lld-link.exe"
+      - "C:/Windows/System32/wbem/lld-link"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/lld-link.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/lld-link.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/lld-link"
+      - "C:/Windows/System32/OpenSSH/lld-link.com"
+      - "C:/Windows/System32/OpenSSH/lld-link.exe"
+      - "C:/Windows/System32/OpenSSH/lld-link"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/lld-link.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/lld-link.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/lld-link"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/lld-link.com"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/lld-link.exe"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/lld-link"
+      - "C:/Program Files/Docker/Docker/resources/bin/lld-link.com"
+      - "C:/Program Files/Docker/Docker/resources/bin/lld-link.exe"
+      - "C:/Program Files/Docker/Docker/resources/bin/lld-link"
+      - "D:/jdk-17/bin/lld-link.com"
+      - "D:/jdk-17/bin/lld-link.exe"
+      - "D:/jdk-17/bin/lld-link"
+      - "D:/Git/cmd/lld-link.com"
+      - "D:/Git/cmd/lld-link.exe"
+      - "D:/Git/cmd/lld-link"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/lld-link.com"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/lld-link.exe"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/lld-link"
+      - "D:/MySQL/MySQL Server 8.0/bin/lld-link.com"
+      - "D:/MySQL/MySQL Server 8.0/bin/lld-link.exe"
+      - "D:/MySQL/MySQL Server 8.0/bin/lld-link"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/lld-link.com"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/lld-link.exe"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/lld-link"
+      - "D:/nodejs/lld-link.com"
+      - "D:/nodejs/lld-link.exe"
+      - "D:/nodejs/lld-link"
+      - "C:/ProgramData/chocolatey/bin/lld-link.com"
+      - "C:/ProgramData/chocolatey/bin/lld-link.exe"
+      - "C:/ProgramData/chocolatey/bin/lld-link"
+      - "C:/Program Files/CMake/bin/lld-link.com"
+      - "C:/Program Files/CMake/bin/lld-link.exe"
+      - "C:/Program Files/CMake/bin/lld-link"
+      - "C:/Users/hp/.local/bin/lld-link.com"
+      - "C:/Users/hp/.local/bin/lld-link.exe"
+      - "C:/Users/hp/.local/bin/lld-link"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/lld-link.com"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/lld-link.exe"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/lld-link"
+      - "D:/Microsoft VS Code/bin/lld-link.com"
+      - "D:/Microsoft VS Code/bin/lld-link.exe"
+      - "D:/Microsoft VS Code/bin/lld-link"
+      - "D:/MiKTeX/miktex/bin/x64/lld-link.com"
+      - "D:/MiKTeX/miktex/bin/x64/lld-link.exe"
+      - "D:/MiKTeX/miktex/bin/x64/lld-link"
+      - "C:/Users/hp/.lmstudio/bin/lld-link.com"
+      - "C:/Users/hp/.lmstudio/bin/lld-link.exe"
+      - "C:/Users/hp/.lmstudio/bin/lld-link"
+      - "D:/nodejs/node_global/lld-link.com"
+      - "D:/nodejs/node_global/lld-link.exe"
+      - "D:/nodejs/node_global/lld-link"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/lld-link.com"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/lld-link.exe"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/lld-link"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "c:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\resources\\helpers"
+        - "C:\\Ruby40-x64\\bin"
+        - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
+        - "D:\\Python\\Python312\\Scripts\\"
+        - "D:\\Python\\Python312\\"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\Docker\\Docker\\resources\\bin"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Git\\cmd"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\"
+        - "C:\\ProgramData\\chocolatey\\bin"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\hp\\.local\\bin"
+        - "C:\\Users\\hp\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Microsoft VS Code\\bin"
+        - "D:\\MiKTeX\\miktex\\bin\\x64\\"
+        - "C:\\Users\\hp\\.lmstudio\\bin"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\node_global"
+        - "C:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineRCCompiler.cmake:40 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-MSVC.cmake:592 (enable_language)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-MSVC.cmake:565 (__windows_compiler_msvc_enable_rc)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-MSVC-C.cmake:5 (__windows_compiler_msvc)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCInformation.cmake:48 (include)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_RC_COMPILER"
+    description: "RC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "rc"
+    candidate_directories:
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/"
+      - "C:/Ruby40-x64/bin/"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/"
+      - "D:/Python/Python312/Scripts/"
+      - "D:/Python/Python312/"
+      - "C:/Windows/System32/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
+      - "C:/Program Files/Docker/Docker/resources/bin/"
+      - "D:/jdk-17/bin/"
+      - "D:/Git/cmd/"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/"
+      - "D:/MySQL/MySQL Server 8.0/bin/"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/"
+      - "D:/nodejs/"
+      - "C:/ProgramData/chocolatey/bin/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/hp/.local/bin/"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/"
+      - "D:/Microsoft VS Code/bin/"
+      - "D:/MiKTeX/miktex/bin/x64/"
+      - "C:/Users/hp/.lmstudio/bin/"
+      - "D:/nodejs/node_global/"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "C:/Program Files/bin/"
+      - "C:/Program Files/sbin/"
+      - "C:/Program Files/"
+      - "C:/Program Files (x86)/bin/"
+      - "C:/Program Files (x86)/sbin/"
+      - "C:/Program Files (x86)/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files/CMake/sbin/"
+      - "C:/Program Files/CMake/"
+      - "C:/Program Files (x86)/MyBot/bin/"
+      - "C:/Program Files (x86)/MyBot/sbin/"
+      - "C:/Program Files (x86)/MyBot/"
+    searched_directories:
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/rc.com"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/rc.exe"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/resources/helpers/rc"
+      - "C:/Ruby40-x64/bin/rc.com"
+      - "C:/Ruby40-x64/bin/rc.exe"
+      - "C:/Ruby40-x64/bin/rc"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/rc.com"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/rc.exe"
+      - "C:/Program Files/Common Files/Oracle/Java/javapath/rc"
+      - "D:/Python/Python312/Scripts/rc.com"
+      - "D:/Python/Python312/Scripts/rc.exe"
+      - "D:/Python/Python312/Scripts/rc"
+      - "D:/Python/Python312/rc.com"
+      - "D:/Python/Python312/rc.exe"
+      - "D:/Python/Python312/rc"
+      - "C:/Windows/System32/rc.com"
+      - "C:/Windows/System32/rc.exe"
+      - "C:/Windows/System32/rc"
+      - "C:/Windows/rc.com"
+      - "C:/Windows/rc.exe"
+      - "C:/Windows/rc"
+      - "C:/Windows/System32/wbem/rc.com"
+      - "C:/Windows/System32/wbem/rc.exe"
+      - "C:/Windows/System32/wbem/rc"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc"
+      - "C:/Windows/System32/OpenSSH/rc.com"
+      - "C:/Windows/System32/OpenSSH/rc.exe"
+      - "C:/Windows/System32/OpenSSH/rc"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/rc.com"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/rc.exe"
+      - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/rc"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/rc.com"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/rc.exe"
+      - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/rc"
+      - "C:/Program Files/Docker/Docker/resources/bin/rc.com"
+      - "C:/Program Files/Docker/Docker/resources/bin/rc.exe"
+      - "C:/Program Files/Docker/Docker/resources/bin/rc"
+      - "D:/jdk-17/bin/rc.com"
+      - "D:/jdk-17/bin/rc.exe"
+      - "D:/jdk-17/bin/rc"
+      - "D:/Git/cmd/rc.com"
+      - "D:/Git/cmd/rc.exe"
+      - "D:/Git/cmd/rc"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/rc.com"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/rc.exe"
+      - "D:/curl-8.18.0_1-win64-mingw/bin/rc"
+      - "D:/MySQL/MySQL Server 8.0/bin/rc.com"
+      - "D:/MySQL/MySQL Server 8.0/bin/rc.exe"
+      - "D:/MySQL/MySQL Server 8.0/bin/rc"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/rc.com"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/rc.exe"
+      - "D:/apache-maven-3.9.12-bin/apache-maven-3.9.12/bin/rc"
+      - "D:/nodejs/rc.com"
+      - "D:/nodejs/rc.exe"
+      - "D:/nodejs/rc"
+      - "C:/ProgramData/chocolatey/bin/rc.com"
+      - "C:/ProgramData/chocolatey/bin/rc.exe"
+      - "C:/ProgramData/chocolatey/bin/rc"
+      - "C:/Program Files/CMake/bin/rc.com"
+      - "C:/Program Files/CMake/bin/rc.exe"
+      - "C:/Program Files/CMake/bin/rc"
+      - "C:/Users/hp/.local/bin/rc.com"
+      - "C:/Users/hp/.local/bin/rc.exe"
+      - "C:/Users/hp/.local/bin/rc"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/rc.com"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/rc.exe"
+      - "C:/Users/hp/AppData/Local/Microsoft/WindowsApps/rc"
+      - "D:/Microsoft VS Code/bin/rc.com"
+      - "D:/Microsoft VS Code/bin/rc.exe"
+      - "D:/Microsoft VS Code/bin/rc"
+      - "D:/MiKTeX/miktex/bin/x64/rc.com"
+      - "D:/MiKTeX/miktex/bin/x64/rc.exe"
+      - "D:/MiKTeX/miktex/bin/x64/rc"
+      - "C:/Users/hp/.lmstudio/bin/rc.com"
+      - "C:/Users/hp/.lmstudio/bin/rc.exe"
+      - "C:/Users/hp/.lmstudio/bin/rc"
+      - "D:/nodejs/node_global/rc.com"
+      - "D:/nodejs/node_global/rc.exe"
+      - "D:/nodejs/node_global/rc"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/rc.com"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/rc.exe"
+      - "C:/Users/hp/AppData/Local/Programs/cursor/resources/app/bin/rc"
+      - "C:/Program Files/bin/rc.com"
+      - "C:/Program Files/bin/rc.exe"
+      - "C:/Program Files/bin/rc"
+      - "C:/Program Files/sbin/rc.com"
+      - "C:/Program Files/sbin/rc.exe"
+      - "C:/Program Files/sbin/rc"
+      - "C:/Program Files/rc.com"
+      - "C:/Program Files/rc.exe"
+      - "C:/Program Files/rc"
+      - "C:/Program Files (x86)/bin/rc.com"
+      - "C:/Program Files (x86)/bin/rc.exe"
+      - "C:/Program Files (x86)/bin/rc"
+      - "C:/Program Files (x86)/sbin/rc.com"
+      - "C:/Program Files (x86)/sbin/rc.exe"
+      - "C:/Program Files (x86)/sbin/rc"
+      - "C:/Program Files (x86)/rc.com"
+      - "C:/Program Files (x86)/rc.exe"
+      - "C:/Program Files (x86)/rc"
+      - "C:/Program Files/CMake/bin/rc.com"
+      - "C:/Program Files/CMake/bin/rc.exe"
+      - "C:/Program Files/CMake/bin/rc"
+      - "C:/Program Files/CMake/sbin/rc.com"
+      - "C:/Program Files/CMake/sbin/rc.exe"
+      - "C:/Program Files/CMake/sbin/rc"
+      - "C:/Program Files/CMake/rc.com"
+      - "C:/Program Files/CMake/rc.exe"
+      - "C:/Program Files/CMake/rc"
+      - "C:/Program Files (x86)/MyBot/bin/rc.com"
+      - "C:/Program Files (x86)/MyBot/bin/rc.exe"
+      - "C:/Program Files (x86)/MyBot/bin/rc"
+      - "C:/Program Files (x86)/MyBot/sbin/rc.com"
+      - "C:/Program Files (x86)/MyBot/sbin/rc.exe"
+      - "C:/Program Files (x86)/MyBot/sbin/rc"
+      - "C:/Program Files (x86)/MyBot/rc.com"
+      - "C:/Program Files (x86)/MyBot/rc.exe"
+      - "C:/Program Files (x86)/MyBot/rc"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "c:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\resources\\helpers"
+        - "C:\\Ruby40-x64\\bin"
+        - "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath"
+        - "D:\\Python\\Python312\\Scripts\\"
+        - "D:\\Python\\Python312\\"
+        - "C:\\Windows\\system32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\Windows\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
+        - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
+        - "C:\\Program Files\\Docker\\Docker\\resources\\bin"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Git\\cmd"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\"
+        - "C:\\ProgramData\\chocolatey\\bin"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\hp\\.local\\bin"
+        - "C:\\Users\\hp\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "D:\\jdk-17\\bin"
+        - "D:\\Microsoft VS Code\\bin"
+        - "D:\\MiKTeX\\miktex\\bin\\x64\\"
+        - "C:\\Users\\hp\\.lmstudio\\bin"
+        - "D:\\curl-8.18.0_1-win64-mingw\\bin"
+        - "D:\\MySQL\\MySQL Server 8.0\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\apache-maven-3.9.12-bin\\apache-maven-3.9.12\\bin"
+        - "D:\\nodejs\\node_global"
+        - "C:\\Users\\hp\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/MyBot"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "C:/Program Files/CMake"
+        - "C:/Program Files (x86)/MyBot"
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/CMakeScratch/TryCompile-vpajjs"
+      binary: "E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/CMakeScratch/TryCompile-vpajjs"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/CMakeScratch/TryCompile-vpajjs'
+        
+        Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_39355.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        MSBuild version 17.14.40+3e7442088 for .NET Framework
+        Build started 10/05/2026 16:56:51.
+        
+        Project "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\CMakeScratch\\TryCompile-vpajjs\\cmTC_39355.vcxproj" on node 1 (default targets).
+        PrepareForBuild:
+          Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+          Creating directory "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\CMakeScratch\\TryCompile-vpajjs\\Debug\\".
+          Creating directory "cmTC_39355.dir\\Debug\\cmTC_39355.tlog\\".
+        InitializeBuildStatus:
+          Creating "cmTC_39355.dir\\Debug\\cmTC_39355.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_39355.dir\\Debug\\cmTC_39355.tlog\\unsuccessfulbuild".
+        ClCompile:
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_39355.dir\\Debug\\\\" /Fd"cmTC_39355.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
+          Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35226 for x64
+          Copyright (C) Microsoft Corporation.  All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_39355.dir\\Debug\\\\" /Fd"cmTC_39355.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
+          CMakeCCompilerABI.c
+        Link:
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\CMakeScratch\\TryCompile-vpajjs\\Debug\\cmTC_39355.exe" /INCREMENTAL /ILK:"cmTC_39355.dir\\Debug\\cmTC_39355.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/CMakeScratch/TryCompile-vpajjs/Debug/cmTC_39355.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/CMakeScratch/TryCompile-vpajjs/Debug/cmTC_39355.lib" /MACHINE:X64  /machine:x64 cmTC_39355.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_39355.vcxproj -> E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\CMakeScratch\\TryCompile-vpajjs\\Debug\\cmTC_39355.exe
+        FinalizeBuildStatus:
+          Deleting file "cmTC_39355.dir\\Debug\\cmTC_39355.tlog\\unsuccessfulbuild".
+          Touching "cmTC_39355.dir\\Debug\\cmTC_39355.tlog\\cmTC_39355.lastbuildstate".
+        Done Building Project "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\CMakeScratch\\TryCompile-vpajjs\\cmTC_39355.vcxproj" (default targets).
+        
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+        
+        Time Elapsed 00:00:00.76
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'C': C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/link.exe
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Running the C compiler's linker: "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.44.35226.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/CMakeScratch/TryCompile-8lzk5b"
+      binary: "E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/CMakeScratch/TryCompile-8lzk5b"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/CMakeScratch/TryCompile-8lzk5b'
+        
+        Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_280ff.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        MSBuild version 17.14.40+3e7442088 for .NET Framework
+        Build started 10/05/2026 16:56:52.
+        
+        Project "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\CMakeScratch\\TryCompile-8lzk5b\\cmTC_280ff.vcxproj" on node 1 (default targets).
+        PrepareForBuild:
+          Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+          Creating directory "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\CMakeScratch\\TryCompile-8lzk5b\\Debug\\".
+          Creating directory "cmTC_280ff.dir\\Debug\\cmTC_280ff.tlog\\".
+        InitializeBuildStatus:
+          Creating "cmTC_280ff.dir\\Debug\\cmTC_280ff.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_280ff.dir\\Debug\\cmTC_280ff.tlog\\unsuccessfulbuild".
+        ClCompile:
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GR /Fo"cmTC_280ff.dir\\Debug\\\\" /Fd"cmTC_280ff.dir\\Debug\\vc143.pdb" /external:W3 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp"
+          Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35226 for x64
+          Copyright (C) Microsoft Corporation.  All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GR /Fo"cmTC_280ff.dir\\Debug\\\\" /Fd"cmTC_280ff.dir\\Debug\\vc143.pdb" /external:W3 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp"
+          CMakeCXXCompilerABI.cpp
+        Link:
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\CMakeScratch\\TryCompile-8lzk5b\\Debug\\cmTC_280ff.exe" /INCREMENTAL /ILK:"cmTC_280ff.dir\\Debug\\cmTC_280ff.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/CMakeScratch/TryCompile-8lzk5b/Debug/cmTC_280ff.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"E:/Halite-III/starter_kits/C++/build-modernization-check/CMakeFiles/CMakeScratch/TryCompile-8lzk5b/Debug/cmTC_280ff.lib" /MACHINE:X64  /machine:x64 cmTC_280ff.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_280ff.vcxproj -> E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\CMakeScratch\\TryCompile-8lzk5b\\Debug\\cmTC_280ff.exe
+        FinalizeBuildStatus:
+          Deleting file "cmTC_280ff.dir\\Debug\\cmTC_280ff.tlog\\unsuccessfulbuild".
+          Touching "cmTC_280ff.dir\\Debug\\cmTC_280ff.tlog\\cmTC_280ff.lastbuildstate".
+        Done Building Project "E:\\Halite-III\\starter_kits\\C++\\build-modernization-check\\CMakeFiles\\CMakeScratch\\TryCompile-8lzk5b\\cmTC_280ff.vcxproj" (default targets).
+        
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+        
+        Time Elapsed 00:00:00.75
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'CXX': C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/link.exe
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Running the CXX compiler's linker: "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.44.35226.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+...
