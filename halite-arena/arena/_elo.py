@@ -57,17 +57,18 @@ class Ladder:
         for bot in (a, b):
             self._ratings.setdefault(bot, self.initial)
 
-    def pairwise_winner(self, a_wins: int, b_wins: int) -> str | None:
-        """Return "a" or "b" under the 'X of N' rule (None on tie).
+    def pairwise_winner(self, a: str, b: str, a_wins: int, b_wins: int) -> str | None:
+        """Return the winner's name under the 'X of N' rule (None on tie).
 
-        Takes win counts only, so it reports the side label; callers that need
-        the bot identity map the label back to their own names.
+        Both bots and their win counts are required, so the result is directly
+        usable (previously the body referenced undefined names and raised
+        NameError; it now takes identity as arguments).
         """
         need = (self.games_per_pair + 1) // 2
         if a_wins >= need:
-            return "a"
+            return a
         if b_wins >= need:
-            return "b"
+            return b
         return None
 
     def compute(self, iterations: int = 200) -> dict[str, float]:

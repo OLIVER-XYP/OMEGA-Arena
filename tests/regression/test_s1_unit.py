@@ -64,9 +64,15 @@ class TestLadder(unittest.TestCase):
     def test_pairwise_winner_threshold_51(self):
         lad = _elo.Ladder(games_per_pair=51)
         need = (51 + 1) // 2  # 26
-        self.assertEqual(lad.pairwise_winner(need, need - 1), "a")
-        self.assertEqual(lad.pairwise_winner(need - 1, need), "b")
-        self.assertIsNone(lad.pairwise_winner(need - 1, need - 1))
+        self.assertEqual(lad.pairwise_winner("alice", "bob", need, need - 1), "alice")
+        self.assertEqual(lad.pairwise_winner("alice", "bob", need - 1, need), "bob")
+        self.assertIsNone(lad.pairwise_winner("alice", "bob", need - 1, need - 1))
+
+    def test_pairwise_winner_returns_bot_identity(self):
+        lad = _elo.Ladder(games_per_pair=11)
+        self.assertEqual(lad.pairwise_winner("rl:cycle002", "eco", 6, 5), "rl:cycle002")
+        self.assertEqual(lad.pairwise_winner("rl:cycle002", "eco", 5, 6), "eco")
+        self.assertIsNone(lad.pairwise_winner("rl:cycle002", "eco", 5, 5))
 
     def test_compute_equal_results_stay_at_initial(self):
         lad = _elo.Ladder()
