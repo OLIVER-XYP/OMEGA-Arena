@@ -36,3 +36,6 @@ halite-arena/state/*.jsonl
 
 # ---- local-only, never published ----
 archive/_private/
+
+# ---- local scratch notes ----
+TODO.md
